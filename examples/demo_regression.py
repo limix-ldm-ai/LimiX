@@ -10,6 +10,7 @@ except:
     from sklearn.metrics import mean_squared_error
     mean_squared_error = partial(mean_squared_error, squared=False)
 import os, sys
+import torch
 
 os.environ["RANK"] = "0"
 os.environ["WORLD_SIZE"] = "1"
@@ -31,7 +32,8 @@ y_train_normalized = (y_train - y_mean) / y_std
 y_test_normalized = (y_test - y_mean) / y_std
 
 model_path = hf_hub_download(repo_id="stableai-org/LimiX-16M", filename="LimiX-16M.ckpt", local_dir="./cache")
-model = LimiXPredictor(device='cuda', model_path=model_path, inference_config='config/reg_default_retrieval.json')
+model = LimiXPredictor(device='cuda' if torch.cuda.is_available() else 'cpu',
+                       model_path=model_path, inference_config='config/reg_default_retrieval.json')
 y_pred = model.predict(X_train, y_train_normalized, X_test, task_type="Regression")    
 
 # Compute RMSE and R²

@@ -12,7 +12,8 @@ class RelabelRetrievalY:
         for i in range(self.y_train.shape[0]):
             self.y_train[i] = np.expand_dims(self.label_encoders[i].fit_transform(self.y_train[i].ravel()), axis=1)
         self.label_y = self.y_train.copy().astype(np.int32)
-        self.y_train = torch.tensor(self.y_train, dtype=torch.float32, device=torch.device('cuda'))
+        self.y_train = torch.tensor(self.y_train, dtype=torch.float32,
+                                    device=torch.device('cuda') if torch.cuda.is_available() else 'cpu')
         return self.y_train
 
     def inverse_transform_y(self, X: np.ndarray) -> np.ndarray:

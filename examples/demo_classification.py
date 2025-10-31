@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from huggingface_hub import hf_hub_download
 import numpy as np
 import os, sys
+import torch
 
 os.environ["RANK"] = "0"
 os.environ["WORLD_SIZE"] = "1"
@@ -20,7 +21,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 
 model_file = hf_hub_download(repo_id="stableai-org/LimiX-16M", filename="LimiX-16M.ckpt", local_dir="./cache")
 
-clf = LimiXPredictor(device='cuda', model_path=model_file, inference_config='config/cls_default_retrieval.json')
+clf = LimiXPredictor(device='cuda' if torch.cuda.is_available() else 'cpu',
+                     model_path=model_file, inference_config='config/cls_default_retrieval.json')
 prediction = clf.predict(X_train, y_train, X_test, task_type="Classification")
 
 auc = roc_auc_score(y_test, prediction[:, 1])

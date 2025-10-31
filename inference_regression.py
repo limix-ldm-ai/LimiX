@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import sys
 
 import math
 import numpy as np
@@ -16,6 +17,7 @@ try:
 except:
     from sklearn.metrics import mean_squared_error
     mean_squared_error = partial(mean_squared_error, squared=False)
+from inference.inference_method import setup
 from inference.predictor import LimiXPredictor
 from utils.inference_utils import generate_infenerce_config, sample_inferece_params
 import torch.distributed as dist
@@ -23,7 +25,7 @@ os.environ['HF_ENDPOINT']="https://hf-mirror.com"
 from utils.utils import  download_datset, download_model
 
 if not torch.cuda.is_available():
-    raise SystemError('GPU device not found. For fast training, please enable GPU.')
+    print('GPU device not found. For fast training, please enable GPU.', file=sys.stderr)
 
 
 def inference_dataset(X_train, X_test, y_train, y_test, model):
@@ -99,6 +101,7 @@ if __name__ == '__main__':
     with open(save_config_path, "w") as f:
         json.dump(inference_config, f)
 
+    setup()
     model = LimiXPredictor(device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
                                 model_path=model_file, inference_config=inference_config,
                                 inference_with_DDP=args.inference_with_DDP)

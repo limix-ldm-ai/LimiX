@@ -15,14 +15,40 @@ import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 
-def setup():
+import os
+import sys
+import torch
+import torch.distributed as dist
+
+
+def setup(verbose=False):
+    if verbose:
+        print(f"[pid={os.getpid()}] RANK={os.environ.get('RANK')} LOCAL_RANK={os.environ.get('LOCAL_RANK')} WORLD_SIZE={os.environ.get('WORLD_SIZE')}", flush=True)
 
     if dist.is_initialized():
-        return dist.get_rank(),dist.get_world_size()
-    dist.init_process_group("nccl")
+        rank, world_size = dist.get_rank(), dist.get_world_size()
+        if rank == 0:
+            print("setup() found an already-initialized process group.", flush=True)
+        return rank, world_size
+
+    # Choose backend: gloo on macOS or if CUDA unavailable
+    backend = "gloo" if not torch.cuda.is_available() else "nccl"
+
+    # Initialize via env set by torchrun
+    dist.init_process_group(backend=backend, init_method="env://")
+
     rank = dist.get_rank()
     world_size = dist.get_world_size()
-    torch.cuda.set_device(rank)
+
+    # Device selection: DO NOT use torch.cuda on M‑series/macOS
+    if torch.cuda.is_available():
+        # Safe on CUDA machines only
+        torch.cuda.set_device(rank % torch.cuda.device_count())
+
+    if verbose and rank == 0:
+        print(f"setting up torch rank", flush=True)
+        print(f"rank:{rank}, world_size:{world_size}, backend:{backend}", flush=True)
+
     return rank, world_size
 
 
@@ -75,8 +101,7 @@ class InferenceResultWithRetrieval:
                   dynamic_ratio:float=None,
                   task_type: Literal["reg", "cls"] = "reg"):
         self.rank,self.world_size = setup()
-        model = self.model.cuda(self.rank)
-        model = DDP(model, device_ids=[self.rank],find_unused_parameters=False)
+        model = _to_DDP(self.model, self.rank)
         if isinstance(retrieval_len,str):
             if retrieval_len == "dynamic":
                 if dynamic_ratio is not None:
@@ -100,7 +125,7 @@ class InferenceResultWithRetrieval:
         indice = []
         for data in dataloader:
             with (
-                torch.autocast(torch.device(model.device).type, enabled=True),
+                torch.autocast(torch.device(model.device).type, enabled=torch.cuda.is_available()),
                 torch.inference_mode(),
             ):
                 if self.sample_selection_type == "DDP":
@@ -149,6 +174,20 @@ class InferenceResultWithRetrieval:
         return outputs.squeeze(0)
 
 
+def _to_DDP(model: torch.nn.Module, rank: int) -> DDP:
+    if torch.cuda.is_available():
+        device = torch.device(f"cuda:{rank}")
+        model = model.to(device)
+        # GPU DDP: pass device_ids
+        model = DDP(model, device_ids=[device.index], find_unused_parameters=False)
+    else:
+        # MPS path: DDP backend remains gloo; DDP expects CPU or CUDA; keep DDP on CPU or skip DDP
+        # Option A (simple, portable): keep DDP on CPU
+        model = model.cpu()
+        model = DDP(model, find_unused_parameters=False)
+    return model
+
+
 class InferenceAttentionMap:
     def __init__(self,
                  model_path: str,
@@ -181,9 +220,7 @@ class InferenceAttentionMap:
                   X_test: torch.Tensor | np.ndarray,
                   task_type: Literal["reg", "cls"] = "reg") -> tuple[torch.Tensor | None, torch.Tensor | None]:
         self.rank, self.world_size = setup()
-        # device = torch.device(f"cuda:{self.rank}")
-        model = self.model.cuda(self.rank)
-        model = DDP(model, device_ids=[self.rank])
+        model = _to_DDP(self.model, self.rank)
         model.eval()
         if isinstance(X_train, np.ndarray):
             X_train = torch.from_numpy(X_train).float()
@@ -212,7 +249,9 @@ class InferenceAttentionMap:
             x_=torch.cat([X_train,X_test],dim=0).unsqueeze(dim=0)
 
             y_=y_train.unsqueeze(0)
-            with(torch.autocast(device_type='cuda', enabled=True), torch.inference_mode()):
+            with(torch.autocast(device_type='cuda' if torch.cuda.is_available() else 'cpu',
+                                enabled=torch.cuda.is_available()),
+                 torch.inference_mode()):
                 output,feature_attention,sample_attention = model(x=x_, y=y_, eval_pos=y_.shape[1], task_type=task_type)
 
             if self.calculate_sample_attention:

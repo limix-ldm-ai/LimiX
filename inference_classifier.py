@@ -1,8 +1,10 @@
 import json
 import os
+import sys
 import time
 
 from inference.predictor import LimiXPredictor
+from inference.inference_method import setup
 import pandas as pd
 from tqdm import tqdm
 import numpy as np
@@ -24,7 +26,7 @@ os.environ['HF_ENDPOINT']="https://hf-mirror.com"
 from utils.utils import  download_datset, download_model
 
 if not torch.cuda.is_available():
-    raise SystemError('GPU device not found. For fast training, please enable GPU.')
+    print('GPU device not found. For fast training, please enable GPU.', file=sys.stderr)
 
 def auc_metric(target, pred, multi_class='ovo', numpy=False):
     lib = np if numpy else torch
@@ -168,7 +170,7 @@ if __name__ == '__main__':
     with open(save_config_path, "w") as f:
         json.dump(inference_config, f)
 
-
+    setup()
     scaler = MinMaxScaler()
     le = LabelEncoder()
 

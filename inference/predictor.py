@@ -371,7 +371,9 @@ class LimiXPredictor:
                 outputs.append(output)
             else:
                 self.model.to(self.device)
-                with(torch.autocast(device_type='cuda', enabled=self.mix_precision), torch.inference_mode()):
+                with(torch.autocast(device_type='cuda' if torch.cuda.is_available() else 'cpu',
+                                    enabled=(self.mix_precision and torch.cuda.is_available())),
+                     torch.inference_mode()):
                     x_=x_.unsqueeze(0)
                     y_ = y_.unsqueeze(0)
                     output=self.model(x=x_, y=y_, eval_pos=y_.shape[1], task_type='cls')
@@ -552,7 +554,9 @@ class LimiXPredictor:
                 outputs.append(output)
             else:
                 self.model.to(self.device)
-                with(torch.autocast(device_type='cuda', enabled=self.mix_precision), torch.inference_mode()):
+                with(torch.autocast(device_type='cuda' if torch.cuda.is_available() else 'cpu',
+                                    enabled=(self.mix_precision and torch.cuda.is_available())),
+                     torch.inference_mode()):
                     x_=x_.unsqueeze(0)
                     y_ = y_.unsqueeze(0)
 
