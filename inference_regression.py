@@ -13,7 +13,7 @@ from pathlib import Path
 from sklearn.metrics import r2_score
 try:
     from sklearn.metrics import root_mean_squared_error as mean_squared_error
-except:
+except ImportError:
     from sklearn.metrics import mean_squared_error
     mean_squared_error = partial(mean_squared_error, squared=False)
 from inference.predictor import LimiXPredictor

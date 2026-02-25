@@ -41,7 +41,7 @@ class SelectiveInversePipeline(Pipeline):
             name, transformer = self.steps[step_idx]
             try:
                 check_is_fitted(transformer)
-            except:
+            except Exception:
                 continue
             
             if name in self.skip_inverse:
