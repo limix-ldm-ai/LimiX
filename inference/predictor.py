@@ -574,13 +574,11 @@ class LimiXPredictor:
                                                  "threshold", 1),
                                              mixed_method=self.inference_config[id_pipe]["retrieval_config"].get(
                                                  "mixed_method", "max"),device=self.device)
-                outputs.append(output)
             elif self.inference_with_DDP:
                 inference = InferenceResultWithRetrieval(model=self.model,
                                                          sample_selection_type="DDP")
                 output = inference.inference(x_[:len(y_train)].squeeze(1), y_, x_[len(y_train):].squeeze(1),
                                              task_type="reg")
-                outputs.append(output)
             else:
                 self.model.to(self.device)
                 with(torch.autocast(device_type=self.device.type if isinstance(self.device, torch.device) else self.device, enabled=self.mix_precision), torch.inference_mode()):
@@ -597,6 +595,7 @@ class LimiXPredictor:
                     output = output['reg_output']
 
                 output = output if isinstance(output, dict) else output.squeeze(0)
+            # FIX: append exactly once per pipeline; previously retrieval/DDP branches appended twice and biased the mean.
             outputs.append(output)
             
         output = torch.stack(outputs).squeeze(2).mean(dim=0)
