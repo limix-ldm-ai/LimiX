@@ -95,8 +95,9 @@ class TabularInferenceDataset(Dataset):
             return dict(
                 idx=int(idx),
                 X_train=self.X_train[idx],  # Training features for this step (retrieved)
-                X_test=self.X_test[idx],  # Training labels for this step (retrieved)
-                y_train=self.y_train[idx],  # The test sample features
+                # FIX: keep the dict keys semantically correct (X_test is the test feature row; y_train is the retrieved labels)
+                X_test=self.X_test[idx],  # Test sample features for this step
+                y_train=self.y_train[idx],  # Retrieved training labels for this step
             )
         else:
             # Return only the test data; training data is assumed to be fixed and

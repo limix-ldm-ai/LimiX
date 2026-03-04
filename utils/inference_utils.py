@@ -99,29 +99,35 @@ def generate_infenerce_config(args):
         use_type=None,
     )
 
+    # FIX: do not reuse the same retrieval_config dict across pipelines; later updates should not mutate others.
+    retrieval_config_1 = retrieval_config.copy()
+    retrieval_config_2 = retrieval_config.copy()
+    retrieval_config_3 = retrieval_config.copy()
+    retrieval_config_4 = retrieval_config.copy()
+
     config_list = [
         dict(RebalanceFeatureDistribution=dict(worker_tags=["quantile"], discrete_flag=False, original_flag=True,
                                                svd_tag="svd"),
              CategoricalFeatureEncoder=dict(encoding_strategy="ordinal_strict_feature_shuffled"),
              FeatureShuffler=dict(mode="shuffle"),
-             retrieval_config=retrieval_config,
+             retrieval_config=retrieval_config_1,
              ),
         dict(RebalanceFeatureDistribution=dict(worker_tags=["quantile"], discrete_flag=False, original_flag=True,
                                                svd_tag="svd"),
              CategoricalFeatureEncoder=dict(encoding_strategy="ordinal_strict_feature_shuffled"),
-             FeatureShuffler=dict(mode="shuffle"), retrieval_config=retrieval_config,
+             FeatureShuffler=dict(mode="shuffle"), retrieval_config=retrieval_config_2,
              ),
         dict(RebalanceFeatureDistribution=dict(worker_tags=[None], discrete_flag=True, original_flag=False,
                                                svd_tag=None),
              CategoricalFeatureEncoder=dict(encoding_strategy="numeric"),
              FeatureShuffler=dict(mode="shuffle"),
-             retrieval_config=retrieval_config,
+             retrieval_config=retrieval_config_3,
              ),
         dict(RebalanceFeatureDistribution=dict(worker_tags=[None], discrete_flag=True, original_flag=False,
                                                svd_tag=None),
              CategoricalFeatureEncoder=dict(encoding_strategy="numeric"),
              FeatureShuffler=dict(mode="shuffle"),
-             retrieval_config=retrieval_config)
+             retrieval_config=retrieval_config_4)
     ]
 
     with open(args.inference_config_path, 'w') as f:
