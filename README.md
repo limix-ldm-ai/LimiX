@@ -238,6 +238,10 @@ wget -O flash_attn.whl https://github.com/Dao-AILab/flash-attention/releases/dow
 pip install flash_attn.whl
 ```
 
+#### Optional: MLX backend (Apple silicon)
+
+On Apple silicon, `pip install -e .[mlx]` additionally installs [MLX](https://github.com/ml-explore/mlx) for the `limix_mlx` package, which runs the LimiX-2 forward pass on the Mac GPU. It subclasses the reference `LimiXPredictor`, so preprocessing, ensembling and decoding are unchanged. See [limix_mlx/README.md](limix_mlx/README.md) for parity results and benchmarks.
+
 #### Step 2: pip editable install
 
 ```bash
