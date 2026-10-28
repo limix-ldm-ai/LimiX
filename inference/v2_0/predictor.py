@@ -436,6 +436,7 @@ class LimiXPredictor:
                  enable_preprocess_parallel: bool = True,
                  preprocess_num_jobs: int = 16,
                  gpu_ids: List[int] | None = None,
+                 cache_dir: str="/tmp",
                  **kwargs,
                  ):
         """Functionality: Initialize the predictor: load v2 config, build preprocess pipelines, and load the model.
@@ -467,6 +468,7 @@ class LimiXPredictor:
             preprocess_num_jobs: CPU worker count for parallel preprocess. Default 16.
             gpu_ids: Optional CUDA indices for pipeline-parallel ensemble members.
                 None or length 1 is single-GPU. Length >= 2 spawns a worker pool.
+            cache_dir: Cache directory path
             **kwargs: Unknown names are warned and ignored (forward compatibility).
 
         Output:
@@ -475,7 +477,7 @@ class LimiXPredictor:
         """
         warn_unsupported_predictor_kwargs(kwargs)
         # Initialize the cache manager
-        self.cache_manager = self.CacheManager(cache_dir="/mnt/public/lijiansheng0830cache")
+        self.cache_manager = self.CacheManager(cache_dir=cache_dir)
         self.use_data_cache = use_data_cache
 
         inference_config, inference_pipeline_config = _load_v2_inference_config(inference_config)
@@ -1330,11 +1332,11 @@ class LimiXPredictor:
             Nested class providing read/write and cached_computation.
         """
         
-        def __init__(self, cache_dir="/mnt/public/infe_cache"):
+        def __init__(self, cache_dir):
             """Functionality: Create the cache directory if it does not exist.
 
             Input:
-                cache_dir: Cache root, default /mnt/public/infe_cache.
+                cache_dir: Cache root
 
             Output:
                 None.
