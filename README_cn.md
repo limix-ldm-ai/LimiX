@@ -52,11 +52,11 @@ LimiX-2 是 LimiX 家族中的新一代模型，它是基于我们此前确立�
 
 <div align="center">
 
-| 模型       |  参数量    | 发布日期    | 下载链接                                                                      | 支持的任务                                             |
-| ---------- | ----------- | ----------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
-| LimiX-2    | 400M  ｜ 2026-9-16   | [LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main)         | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
-| LimiX-2M | 2M  ｜ 2025-11-10  | [LimiX-2M.ckpt](https://huggingface.co/stable-ai/LimiX-1_2M/tree/main)   | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
-| LimiX-16M| 16M  ｜ 2025-8-29   | [LimiX-16M.ckpt](https://huggingface.co/stable-ai/LimiX-1_16M/tree/main) | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+| 模型        | 参数量 | 发布日期   | 下载链接                                                                      | 支持的任务                 |
+| ----------- | ------ | ---------- | ----------------------------------------------------------------------------- | -------------------------- |
+| LimiX-2     | 400M   | 2026-09-16 | [LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main)             | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+| LimiX-1_2M  | 2M     | 2025-11-10 | [LimiX-1_2M.ckpt](https://huggingface.co/stable-ai/LimiX-1_2M/tree/main)       | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+| LimiX-1_16M | 16M    | 2025-08-29 | [LimiX-1_16M.ckpt](https://huggingface.co/stable-ai/LimiX-1_16M/tree/main)     | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
 
 </div>
 
