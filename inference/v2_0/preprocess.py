@@ -2230,7 +2230,8 @@ class FingerprintFeatureEncoder(BasePreprocess):
 
         Input:
             x: 2-D features.
-            is_test: If True, collisions are not resolved.
+            is_test: If True, resolve collisions against a copy of the state left by the train transform,
+                so test rows get the same hashes as when appended after train in one matrix.
 
         Output:
             tuple[np.ndarray, list[int]]: (matrix with fingerprint column, original categorical indices).
@@ -2246,34 +2247,45 @@ class FingerprintFeatureEncoder(BasePreprocess):
         salted_data = x + self.salt_value
         
         if is_test:
-            # Test mode: use first hash regardless of collisions
-            for idx in range(n_samples):
-                row_hash = float_hash_arr(salted_data[idx] + self.salt_value)
-                fingerprint_col[idx] = row_hash
+            existing_hashes = set(self.train_hashes_)
+            next_increment_by_row: dict[bytes, int] = dict(self.train_increments_)
         else:
-            # Training mode: resolve hash collisions
             existing_hashes = set()
-            for idx in range(n_samples):
-                current_row = salted_data[idx]
-                hash_val = float_hash_arr(current_row)
-                increment = 0
-                
-                # Handle collisions by incrementing and rehashing.
-                # Guard: for a row that is entirely non-finite (all NaN/inf),
-                # `current_row + increment` leaves the bytes unchanged, so the
-                # rehash is constant and this loop would spin forever. Break as
-                # soon as the rehash stops changing. Rows with any finite value
-                # keep the original behavior exactly, so results are unchanged
-                # for every dataset that previously completed.
-                while hash_val in existing_hashes:
-                    increment += 1
-                    new_hash = float_hash_arr(current_row + increment)
-                    if new_hash == hash_val:
-                        break
-                    hash_val = new_hash
-                
-                fingerprint_col[idx] = hash_val
-                existing_hashes.add(hash_val)
+            next_increment_by_row = {}
+        for idx in range(n_samples):
+            current_row = salted_data[idx]
+            row_key = current_row.tobytes()
+            increment = next_increment_by_row.get(row_key, 0)
+            hash_val = float_hash_arr(current_row if increment == 0 else current_row + increment)
+            rehash_useless = False
+            
+            # Handle collisions by incrementing and rehashing.
+            # Guard: for a row that is entirely non-finite (all NaN/inf),
+            # `current_row + increment` leaves the bytes unchanged, so the
+            # rehash is constant and this loop would spin forever. Break as
+            # soon as the rehash stops changing. Rows with any finite value
+            # keep the original behavior exactly, so results are unchanged
+            # for every dataset that previously completed.
+            while hash_val in existing_hashes:
+                increment += 1
+                new_hash = float_hash_arr(current_row + increment)
+                if new_hash == hash_val:
+                    rehash_useless = True
+                    break
+                hash_val = new_hash
+            
+            fingerprint_col[idx] = hash_val
+            existing_hashes.add(hash_val)
+            if rehash_useless:
+                # NOTE: The 1st all-NaN/inf row creates a {row_key, hash} dict item
+                #       the 2nd all-NaN/inf row detects that rehashing is useless and removes its row_key
+                #       the resulting hash will still collide anyway
+                next_increment_by_row.pop(row_key, None)
+            else:
+                next_increment_by_row[row_key] = increment + 1
+        if not is_test:
+            self.train_hashes_ = existing_hashes
+            self.train_increments_ = next_increment_by_row
         
         # Append fingerprint column and update categorical indices
         transformed = np.column_stack([x, fingerprint_col.reshape(-1, 1)])
