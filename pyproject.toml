@@ -24,6 +24,13 @@ dependencies = [
     "joblib",
 ]
 
+[project.optional-dependencies]
+# MLX backend (limix_mlx): Apple silicon only. The markers make
+# `pip install LimiX[mlx]` a no-op elsewhere instead of a resolution error.
+mlx = [
+    "mlx>=0.20; sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
+
 [project.scripts]
 LimiX-infer = "infer:main"
 
