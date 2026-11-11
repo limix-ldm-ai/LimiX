@@ -1,0 +1,893 @@
+{
+  "feature_view_strategy": "disabled",
+  "feature_view_prediction_weight": 0.5,
+  "feature_view_multiclass_calibration": false,
+  "fixed_feature_views": {
+    "enabled": false,
+    "views": [
+      "numeric_tail_interactions",
+      "structured_string_statistics",
+      "low_cardinality_numeric_states"
+    ],
+    "max_numeric_columns": 8,
+    "max_numeric_pairs": 6,
+    "max_string_columns": 6,
+    "max_low_cardinality_columns": 6,
+    "low_cardinality_max_states": 10
+  },
+  "feature_encoder_mode": "train_unknown_nan",
+  "adaptive_svd": {
+    "enabled": false,
+    "memory_fraction": 0.65,
+    "reserve_mb": 512,
+    "safety_factor": 1.25,
+    "minimum_components": 0,
+    "retry_on_cuda_resource_error": true,
+    "retry_max_components": 0
+  },
+  "pipelines": [
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_strict_feature_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_uniform_10"
+      ],
+      "discrete_flag": false,
+      "original_flag": true,
+      "svd_tag": "svd",
+      "svd_max_components": 64
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "numeric"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_5"
+      ],
+      "discrete_flag": true,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "kdi_uni"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 10
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_5"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "robust"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": "svd",
+      "svd_max_components": 32
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_strict_feature_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_uniform_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_5"
+      ],
+      "discrete_flag": false,
+      "original_flag": true,
+      "svd_tag": "svd",
+      "svd_max_components": 128
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "numeric"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 50
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_strict_feature_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "kdi_uni"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_5"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 10
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_uniform_5"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": "svd",
+      "svd_max_components": 128
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "none"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 100
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        null
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": true,
+      "original_flag": false,
+      "svd_tag": "svd",
+      "svd_max_components": 128
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_strict_feature_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "power"
+      ],
+      "discrete_flag": true,
+      "original_flag": true,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 10
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_10"
+      ],
+      "discrete_flag": false,
+      "original_flag": true,
+      "svd_tag": "svd",
+      "svd_max_components": 64
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "numeric"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_uniform_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_uniform_10"
+      ],
+      "discrete_flag": false,
+      "original_flag": true,
+      "svd_tag": "svd",
+      "svd_max_components": 64
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "power"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "none"
+    },
+    "FeatureShuffler": {
+      "mode": null
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 50
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_5"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_strict_feature_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "kdi_uni"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": true,
+      "original_flag": false,
+      "svd_tag": "svd",
+      "svd_max_components": 128
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_5"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 10
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_all_data"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_strict_feature_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "FingerprintFeatureEncoder": true
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_uniform_10"
+      ],
+      "discrete_flag": false,
+      "original_flag": true,
+      "svd_tag": "svd",
+      "svd_max_components": 64
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "robust"
+      ],
+      "discrete_flag": false,
+      "original_flag": true,
+      "svd_tag": "svd",
+      "svd_max_components": 32
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal"
+    },
+    "FeatureShuffler": {
+      "mode": null
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    },
+    "PolynomialInteractionGenerator": {
+      "max_interaction_features": 100
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        "quantile_norm_5"
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "ordinal_shuffled"
+    },
+    "FeatureShuffler": {
+      "mode": "shuffle"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  },
+  {
+    "RebalanceFeatureDistribution": {
+      "worker_tags": [
+        null
+      ],
+      "discrete_flag": false,
+      "original_flag": false,
+      "svd_tag": null
+    },
+    "CategoricalFeatureEncoder": {
+      "encoding_strategy": "onehot",
+      "onehot_size_fallback": false
+    },
+    "FeatureShuffler": {
+      "mode": "rotate"
+    },
+    "retrieval_config": {
+      "use_retrieval": false,
+      "retrieval_before_preprocessing": false,
+      "calculate_feature_attention": false,
+      "calculate_sample_attention": false,
+      "subsample_ratio": 0.7,
+      "subsample_type": "sample",
+      "use_type": "mixed"
+    }
+  }
+]
+}

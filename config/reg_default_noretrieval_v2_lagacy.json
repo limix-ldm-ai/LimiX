@@ -1,0 +1,209 @@
+{
+  "feature_view_strategy": "disabled",
+  "feature_encoder_mode": "train_unknown_nan",
+  "adaptive_svd": {
+    "enabled": false
+  },
+  "pipelines": [
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "quantile_uniform_all_data"
+        ],
+        "discrete_flag": false,
+        "original_flag": true,
+        "svd_tag": "svd"
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "ordinal_strict_feature_shuffled"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    },
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "quantile_uniform_all_data"
+        ],
+        "discrete_flag": false,
+        "original_flag": true,
+        "svd_tag": "svd"
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "ordinal_strict_feature_shuffled"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    },
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "quantile_uniform_all_data"
+        ],
+        "discrete_flag": false,
+        "original_flag": true,
+        "svd_tag": "svd"
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "ordinal_strict_feature_shuffled"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    },
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "quantile_uniform_all_data"
+        ],
+        "discrete_flag": false,
+        "original_flag": true,
+        "svd_tag": "svd"
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "ordinal_strict_feature_shuffled"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    },
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "power"
+        ],
+        "discrete_flag": false,
+        "original_flag": false,
+        "svd_tag": null
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "onehot"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    },
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "power"
+        ],
+        "discrete_flag": false,
+        "original_flag": false,
+        "svd_tag": null
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "onehot"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    },
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "power"
+        ],
+        "discrete_flag": false,
+        "original_flag": false,
+        "svd_tag": null
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "onehot"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    },
+    {
+      "RebalanceFeatureDistribution": {
+        "worker_tags": [
+          "power"
+        ],
+        "discrete_flag": false,
+        "original_flag": false,
+        "svd_tag": null
+      },
+      "CategoricalFeatureEncoder": {
+        "encoding_strategy": "onehot"
+      },
+      "FeatureShuffler": {
+        "mode": "shuffle"
+      },
+      "retrieval_config": {
+        "use_retrieval": false,
+        "retrieval_before_preprocessing": false,
+        "calculate_feature_attention": false,
+        "calculate_sample_attention": false,
+        "subsample_ratio": 0.7,
+        "subsample_type": "sample",
+        "use_type": "mixed"
+      }
+    }
+  ]
+}
