@@ -1202,7 +1202,9 @@ def infer_random_state(
     raise ValueError(f"Invalid random_state {random_state}")
 
 class FilterValidFeatures(BasePreprocess):
-    """Functionality: Drop invalid feature columns that are constant everywhere or all-NaN on either the train or test side.
+    """Functionality: Drop feature columns that are constant on the training rows, or all-NaN on the training rows.
+
+    Query rows do not decide which columns are constant, and a column that is all-NaN only on the query side is kept.
 
     Input:
         None: State is recorded during fit.
@@ -1226,31 +1228,41 @@ class FilterValidFeatures(BasePreprocess):
 
     @override
     def fit(self, x:np.ndarray, categorical_features:list[int], seed:int, y:np.ndarray | None = None, **kwargs) -> list[int]:
-        """Functionality: Mark non-constant columns. When y is provided, also drop columns that are all-NaN on either the train or test split.
+        """Functionality: Mark columns that vary on the training rows. Drop training columns that are all-NaN.
 
         Input:
-            x: Concatenated train+test features.
+            x: Feature matrix. When y is provided, the leading len(y) rows are the training rows and the rest are query rows.
             categorical_features: Original categorical indices.
             seed: Unused.
-            y: Optional train labels used to determine eval_pos.
+            y: Train labels. Their length selects the training rows. Query values are not used.
 
         Output:
             list[int]: categorical indices that remain after filtering. Raises ValueError if every column is invalid.
         """
         self.categorical_idx = categorical_features
-        self.valid_features = ((x[0:1, :] == x).mean(axis=0) < 1.0).tolist()
-        self.invalid_indices = ((x[0:1, :] == x).mean(axis=0) == 1.0).tolist()
-
-        if y is not None:
-            eval_pos = len(y)
-            nan_train = np.isnan(x[:eval_pos, :])
-            all_nan_train = np.all(nan_train, axis=0)
-            nan_test = np.isnan(x[eval_pos:, :])
-            all_nan_test = np.all(nan_test, axis=0)
-            
-            features_nan = all_nan_train | all_nan_test
-            self.valid_features = self.valid_features & ~features_nan
-            self.invalid_indices = self.invalid_indices | features_nan
+        if y is None:
+            n_train = x.shape[0]
+        else:
+            n_train = len(y)
+            if n_train <= 0 or n_train > x.shape[0]:
+                raise ValueError(
+                    f"training row count {n_train} is outside [1, {x.shape[0]}]"
+                )
+        reference = x[:n_train]
+        n_features = x.shape[1]
+        if reference.shape[0] >= 2 and n_features:
+            constant = (reference[:1] == reference).mean(axis=0) == 1.0
+        else:
+            # A single training row cannot show variation. Do not consult query rows.
+            constant = np.zeros(n_features, dtype=bool)
+        valid = ~np.asarray(constant, dtype=bool)
+        invalid = np.asarray(constant, dtype=bool)
+        if y is not None and n_train > 0 and n_features:
+            all_nan_train = np.all(np.isnan(reference), axis=0)
+            valid = valid & ~all_nan_train
+            invalid = invalid | all_nan_train
+        self.valid_features = valid
+        self.invalid_indices = invalid
 
         if not any(self.valid_features):
             raise ValueError("All features are constant! Please check your data.")
@@ -1395,48 +1407,98 @@ class CategoricalFeatureEncoder(BasePreprocess):
         self.onehot_output_shape = None
 
     @override
-    def fit_transform(self, x:np.ndarray, categorical_features:list[int], seed:int, **kwargs) -> tuple[np.ndarray, list[int]]:
+    def fit_transform(self, x:np.ndarray, categorical_features:list[int], seed:int, y:np.ndarray | None = None, **kwargs) -> tuple[np.ndarray, list[int]]:
         """Functionality: Record the random seed and run encoding.
 
         Input:
-            x: 2-D features.
+            x: 2-D features. When y is provided, the leading len(y) rows are training rows.
             categorical_features: Categorical column indices.
             seed: Random seed used for ordinal shuffling.
+            y: Train labels. Their length selects the rows used to fit encoders.
 
         Output:
             tuple[np.ndarray, list[int]]: (encoded features, new categorical indices).
         """
         self.random_seed = seed
-        return self._fit_transform(x, categorical_features)
+        return self._fit_transform(x, categorical_features, y=y)
+
+    @staticmethod
+    def _training_view(X: np.ndarray, y: np.ndarray | None) -> tuple[np.ndarray, np.ndarray]:
+        """Functionality: Split a concatenated matrix into training rows and query rows.
+
+        Input:
+            X: 2-D features.
+            y: Train labels, or None when X itself is the training matrix.
+
+        Output:
+            tuple[np.ndarray, np.ndarray]: (training rows, query rows). Query rows may have length 0.
+        """
+        if y is None:
+            return X, X[:0]
+        n_train = len(y)
+        if n_train <= 0 or n_train > len(X):
+            raise ValueError(
+                f"training row count {n_train} is outside [1, {len(X)}]"
+            )
+        return X[:n_train], X[n_train:]
+
+    @staticmethod
+    def _transform_train_and_query(transformer, X_train: np.ndarray, X_query: np.ndarray) -> np.ndarray:
+        """Functionality: Transform training and query rows with one fitted encoder and stack them.
+
+        Input:
+            transformer: Fitted sklearn transformer.
+            X_train: Training rows.
+            X_query: Query rows. Empty when there is no query split.
+
+        Output:
+            np.ndarray: transformed training rows followed by transformed query rows.
+        """
+        transformed_train = np.asarray(transformer.transform(X_train))
+        if len(X_query) == 0:
+            return transformed_train
+        transformed_query = np.asarray(transformer.transform(X_query))
+        if transformed_train.ndim == 1:
+            transformed_train = transformed_train.reshape(-1, 1)
+            transformed_query = transformed_query.reshape(-1, 1)
+        return np.concatenate([transformed_train, transformed_query], axis=0)
 
     def _fit_transform(
         self,
         X: np.ndarray,
         categorical_features: list[int],
+        y: np.ndarray | None = None,
     ) -> tuple[np.ndarray, list[int]]:
-        # print(f"encoding_strategy: {self.encoding_strategy}")
-        """Functionality: Build a ColumnTransformer and fit_transform. One-hot may fall back when the result is too large.
+        """Functionality: Fit ordinal or one-hot encoding on training rows, then transform every row.
+
+        Category counts, ordinal codes, and one-hot columns come from the training rows.
+        Query categories absent from training become missing (ordinal) or ignored (one-hot).
+        The one-hot size guard still looks at the full transformed matrix, because that is the array the model receives.
 
         Input:
             X: 2-D features.
             categorical_features: Categorical column indices.
+            y: Train labels used to locate the training rows.
 
         Output:
             tuple[np.ndarray, list[int]].
         """
-        ct, categorical_features = self._create_transformer(X, categorical_features)
+        X_train, X_query = self._training_view(X, y)
+        ct, categorical_features = self._create_transformer(X_train, categorical_features)
         if ct is None:
             self.transformer = None
             return X, categorical_features
 
         _, rng = infer_random_state(self.random_seed)
 
-        if self.encoding_strategy.startswith("ordinal"):       
-            Xt = ct.fit_transform(X)
+        if self.encoding_strategy.startswith("ordinal"):
+            ct.fit(X_train)
+            Xt = self._transform_train_and_query(ct, X_train, X_query)
             categorical_features = list(range(len(categorical_features)))
 
             if self.encoding_strategy.endswith("_shuffled"):
                 self.category_mappings = {}
+                Xt = np.array(Xt, copy=True)
                 for col_ix in categorical_features:
                     col_cats = len(
                         ct.named_transformers_["ordinal_encoder"].categories_[col_ix],
@@ -1451,7 +1513,8 @@ class CategoricalFeatureEncoder(BasePreprocess):
         elif self.encoding_strategy == "onehot":
             self.onehot_fallback_triggered = False
             self.onehot_input_shape = tuple(X.shape)
-            Xt = ct.fit_transform(X)
+            ct.fit(X_train)
+            Xt = self._transform_train_and_query(ct, X_train, X_query)
             self.onehot_output_shape = tuple(Xt.shape)
             if self.onehot_size_fallback and Xt.size >= 1_000_000:
                 self.onehot_fallback_triggered = True
@@ -2348,13 +2411,14 @@ class PolynomialInteractionGenerator(BasePreprocess):
         self.runtime_interactions_enabled = bool(enabled)
 
     @override
-    def fit(self, x:np.ndarray, categorical_features:list[int], seed:int, **kwargs) -> list[int]:
-        """Functionality: Fit StandardScaler and sample factor pairs. Factor indices are empty when runtime generation is disabled.
+    def fit(self, x:np.ndarray, categorical_features:list[int], seed:int, y:np.ndarray | None = None, **kwargs) -> list[int]:
+        """Functionality: Fit StandardScaler on training rows and sample factor pairs. Factor indices are empty when runtime generation is disabled.
 
         Input:
-            x: 2-D features.
+            x: 2-D features. When y is provided, the leading len(y) rows are the training rows.
             categorical_features: Categorical indices, kept as-is.
             seed: Random seed used to sample factor pairs.
+            y: Train labels. Their length selects the rows used to fit the scaler. Query rows are transformed later with that scaler.
 
         Output:
             list[int]: categorical indices.
@@ -2380,8 +2444,16 @@ class PolynomialInteractionGenerator(BasePreprocess):
             else max_possible_combinations
         )
         
-        # Fit only here; transform() materializes the standardized values once.
-        self.feature_normalizer.fit(x)
+        if y is None:
+            n_train = x.shape[0]
+        else:
+            n_train = len(y)
+            if n_train <= 0 or n_train > x.shape[0]:
+                raise ValueError(
+                    f"training row count {n_train} is outside [1, {x.shape[0]}]"
+                )
+        # Fit only here; transform() standardizes every row with the training scaler.
+        self.feature_normalizer.fit(x[:n_train])
 
         if not getattr(self, "runtime_interactions_enabled", True):
             self.primary_factor_indices = np.empty(0, dtype=np.int64)

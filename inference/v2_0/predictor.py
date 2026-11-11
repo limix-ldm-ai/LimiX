@@ -2110,13 +2110,16 @@ class LimiXPredictor:
             x[integer_columns] = x[integer_columns].astype(dtypes)
         return x
     
-    def convert_category2num(self, x, dtype:np.floating=np.float64, placeholder: str = NA_PLACEHOLDER,):
+    def convert_category2num(self, x, dtype:np.floating=np.float64, placeholder: str = NA_PLACEHOLDER, train_rows: int | None = None,):
         """Functionality: Ordinal-encode category/string/bool columns. Missing strings are filled with a placeholder then restored to NaN.
 
+        The encoder is fit on the training rows. Categories that appear only in the query rows become the unknown code.
+
         Input:
-            x: DataFrame with mixed dtypes.
+            x: DataFrame with mixed dtypes. When train_rows is set, the leading rows are the training rows.
             dtype: Floating dtype of the encoded output, default float64.
             placeholder: Missing-string placeholder, default NA_PLACEHOLDER.
+            train_rows: Number of leading training rows. None fits on every row of x.
 
         Output:
             2-D numpy array with categorical columns encoded as numbers.
@@ -2135,8 +2138,20 @@ class LimiXPredictor:
         string_cols = x.select_dtypes(include=["string", "object"]).columns
         if len(string_cols) > 0:
             x[string_cols] = x[string_cols].fillna(placeholder)
-        
-        X_encoded = col_encoder.fit_transform(x)
+
+        if train_rows is None:
+            n_train = len(x)
+        else:
+            n_train = int(train_rows)
+            if n_train <= 0 or n_train > len(x):
+                raise ValueError(
+                    f"training row count {n_train} is outside [1, {len(x)}]"
+                )
+        if n_train == len(x):
+            X_encoded = col_encoder.fit_transform(x)
+        else:
+            col_encoder.fit(x.iloc[:n_train])
+            X_encoded = col_encoder.transform(x)
 
         string_cols_ix = [x.columns.get_loc(col) for col in string_cols]
         placeholder_mask = x[string_cols] == placeholder
@@ -2151,10 +2166,10 @@ class LimiXPredictor:
 
     
     def get_categorical_features_indices(self, x:np.ndarray):
-        """Functionality: When the sample is long enough, treat columns with too few unique values as categorical.
+        """Functionality: When the training sample is long enough, treat columns with too few unique training values as categorical.
 
         Input:
-            x: 2-D numeric array.
+            x: 2-D numeric array containing training rows only. Query rows must not be included.
 
         Output:
             list[int]: categorical column indices. Empty if the row count is below the threshold.
@@ -2358,12 +2373,15 @@ class LimiXPredictor:
                             )
                             values = np.concatenate([train_values, test_values], axis=0)
                         else:
-                            # Keep datetime-disabled regression bitwise aligned with the
-                            # historical single-matrix ordinal conversion path.
-                            values = self.convert_category2num(converted_frame.copy())
+                            values = self.convert_category2num(
+                                converted_frame.copy(),
+                                train_rows=train_size,
+                            )
                     if cast_float32:
                         values = values.astype(np.float32)
-                    categorical_indices = self.get_categorical_features_indices(values)
+                    categorical_indices = self.get_categorical_features_indices(
+                        values[:train_size]
+                    )
                     cache[enabled] = (values, categorical_indices)
 
                 values, categorical_indices = cache[enabled]
@@ -3426,7 +3444,8 @@ class LimiXPredictor:
         x_train, y_train = self.validate_data(x_train, y_train, reset=True, validate_separately=False, accept_sparse=False, dtype=None, ensure_all_finite=False)
         x_test = self.validate_data(x_test, reset=True, validate_separately=False, accept_sparse=False, dtype=None, ensure_all_finite=False)
         
-        # "Concatenate x_train and x_test to ensure the preprocessing logic is completely consistent.
+        # Keep train rows in front so preprocessing can fit on them and then transform query rows.
+        train_rows = len(x_train)
         x = np.concatenate([x_train, x_test], axis=0)
         
         # Encode y_train
@@ -3445,11 +3464,11 @@ class LimiXPredictor:
         if self.n_estimators%len(uniqs) > 0:
             self.class_permutations += [uniqs[i] for i in np_rng.choice(len(uniqs), size=cout)]
         
-        # Preprocess x
+        # Preprocess x. Category codes and unique-value counts use training rows only.
         x = self.convert_x_dtypes(x)
-        x = self.convert_category2num(x)
+        x = self.convert_category2num(x, train_rows=train_rows)
         x = x.astype(np.float32)
-        categorical_idx = self.get_categorical_features_indices(x)
+        categorical_idx = self.get_categorical_features_indices(x[:train_rows])
         mask_predictions = []
         for id_pipe in self._active_pipeline_indices():
             pipe = self.preprocess_pipelines[id_pipe]
