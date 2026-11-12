@@ -18,9 +18,8 @@
        height="24"
        alt="Language"
        style="vertical-align: middle; border: none;" />
-  &nbsp; English
-  &nbsp;|
-  <a href="README_cn.md">中文</a>
+  &nbsp; <a href="README.md">English</a>
+  &nbsp;| 中文
 </div>
 
 <br/>
