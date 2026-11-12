@@ -2247,7 +2247,7 @@ def float_hash_arr(input_array: np.ndarray) -> float:
 
 
 class FingerprintFeatureEncoder(BasePreprocess):
-    """Functionality: Append a per-row hash fingerprint column. Train resolves collisions by rehashing; test uses the first hash.
+    """Functionality: Append a per-row hash fingerprint column. Collisions are resolved across training rows only; each query row is hashed against that frozen state.
 
     Input:
         rng_seed: Historical argument, currently unused. The salt is generated from seed at fit.
@@ -2286,58 +2286,46 @@ class FingerprintFeatureEncoder(BasePreprocess):
         self.salt_value = int(rng.integers(0, 65536))  # 2^16 range
         self.categorical_features = categorical_features
         return categorical_features.copy()
-    
-    @override
-    def transform(self, x:np.ndarray, is_test:bool=False, **kwargs) -> tuple[np.ndarray, list[int]]:
-        """Functionality: Append a fingerprint column on the right.
+
+    @staticmethod
+    def _fingerprint_row(
+        current_row: np.ndarray,
+        existing_hashes: set[float],
+        next_increment_by_row: dict[bytes, int],
+        *,
+        record: bool,
+    ) -> float:
+        """Functionality: Hash one salted row, rehashing while that hash is already taken.
 
         Input:
-            x: 2-D features.
-            is_test: If True, resolve collisions against a copy of the state left by the train transform,
-                so test rows get the same hashes as when appended after train in one matrix.
+            current_row: One salted feature row.
+            existing_hashes: Hashes occupied by training rows.
+            next_increment_by_row: Next collision increment keyed by salted row bytes.
+            record: If True, occupy the returned hash and advance the increment. Query rows pass False.
 
         Output:
-            tuple[np.ndarray, list[int]]: (matrix with fingerprint column, original categorical indices).
+            float: fingerprint in [0, 1).
         """
-        # print(f"add finger")
-        if self.salt_value is None:
-            raise RuntimeError("Must call fit() before transform()")
-        
-        n_samples = x.shape[0]
-        fingerprint_col = np.zeros(n_samples, dtype=x.dtype)
-        
-        # Apply salt to input data
-        salted_data = x + self.salt_value
-        
-        if is_test:
-            existing_hashes = set(self.train_hashes_)
-            next_increment_by_row: dict[bytes, int] = dict(self.train_increments_)
-        else:
-            existing_hashes = set()
-            next_increment_by_row = {}
-        for idx in range(n_samples):
-            current_row = salted_data[idx]
-            row_key = current_row.tobytes()
-            increment = next_increment_by_row.get(row_key, 0)
-            hash_val = float_hash_arr(current_row if increment == 0 else current_row + increment)
-            rehash_useless = False
-            
-            # Handle collisions by incrementing and rehashing.
-            # Guard: for a row that is entirely non-finite (all NaN/inf),
-            # `current_row + increment` leaves the bytes unchanged, so the
-            # rehash is constant and this loop would spin forever. Break as
-            # soon as the rehash stops changing. Rows with any finite value
-            # keep the original behavior exactly, so results are unchanged
-            # for every dataset that previously completed.
-            while hash_val in existing_hashes:
-                increment += 1
-                new_hash = float_hash_arr(current_row + increment)
-                if new_hash == hash_val:
-                    rehash_useless = True
-                    break
-                hash_val = new_hash
-            
-            fingerprint_col[idx] = hash_val
+        row_key = current_row.tobytes()
+        increment = next_increment_by_row.get(row_key, 0)
+        hash_val = float_hash_arr(current_row if increment == 0 else current_row + increment)
+        rehash_useless = False
+
+        # Handle collisions by incrementing and rehashing.
+        # Guard: for a row that is entirely non-finite (all NaN/inf),
+        # `current_row + increment` leaves the bytes unchanged, so the
+        # rehash is constant and this loop would spin forever. Break as
+        # soon as the rehash stops changing. A row with any finite value
+        # still changes under the increment, so its rehash proceeds.
+        while hash_val in existing_hashes:
+            increment += 1
+            new_hash = float_hash_arr(current_row + increment)
+            if new_hash == hash_val:
+                rehash_useless = True
+                break
+            hash_val = new_hash
+
+        if record:
             existing_hashes.add(hash_val)
             if rehash_useless:
                 # NOTE: The 1st all-NaN/inf row creates a {row_key, hash} dict item
@@ -2346,10 +2334,61 @@ class FingerprintFeatureEncoder(BasePreprocess):
                 next_increment_by_row.pop(row_key, None)
             else:
                 next_increment_by_row[row_key] = increment + 1
+        return hash_val
+    
+    @override
+    def transform(self, x:np.ndarray, is_test:bool=False, y:np.ndarray | None = None, **kwargs) -> tuple[np.ndarray, list[int]]:
+        """Functionality: Append a fingerprint column on the right. Training rows resolve collisions among themselves; each query row is hashed independently against the frozen training state.
+
+        Input:
+            x: 2-D features. When y is provided and is_test is False, the leading len(y) rows are training rows and the rest are query rows.
+            is_test: If True, every row is a query row and is hashed against the training state saved by a previous transform.
+            y: Train labels. Their length selects the training prefix. Ignored when is_test is True.
+
+        Output:
+            tuple[np.ndarray, list[int]]: (matrix with fingerprint column, original categorical indices).
+        """
+        if self.salt_value is None:
+            raise RuntimeError("Must call fit() before transform()")
+
+        n_samples = x.shape[0]
+        if is_test:
+            if getattr(self, "train_hashes_", None) is None or getattr(self, "train_increments_", None) is None:
+                raise RuntimeError("Must transform training rows before transforming query rows")
+            n_train = 0
+        elif y is None:
+            n_train = n_samples
+        else:
+            n_train = len(y)
+            if n_train <= 0 or n_train > n_samples:
+                raise ValueError(
+                    f"training row count {n_train} is outside [1, {n_samples}]"
+                )
+
+        fingerprint_col = np.zeros(n_samples, dtype=x.dtype)
+        salted_data = x + self.salt_value
+
         if not is_test:
+            existing_hashes: set[float] = set()
+            next_increment_by_row: dict[bytes, int] = {}
+            for idx in range(n_train):
+                fingerprint_col[idx] = self._fingerprint_row(
+                    salted_data[idx],
+                    existing_hashes,
+                    next_increment_by_row,
+                    record=True,
+                )
             self.train_hashes_ = existing_hashes
             self.train_increments_ = next_increment_by_row
-        
+
+        for idx in range(n_train, n_samples):
+            fingerprint_col[idx] = self._fingerprint_row(
+                salted_data[idx],
+                self.train_hashes_,
+                self.train_increments_,
+                record=False,
+            )
+
         # Append fingerprint column and update categorical indices
         transformed = np.column_stack([x, fingerprint_col.reshape(-1, 1)])
         # cat_indices_updated = list(range(x.shape[1]))  # Original features remain categorical

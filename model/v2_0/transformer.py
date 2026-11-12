@@ -741,7 +741,38 @@ class FeaturesTransformer(nn.Module):
         x_input = torch.where(mask==1, float('nan'), x_input)
         x_input = torch.where(mask==2, x_feature_mean, x_input)
         x_input = torch.where(mask==3, x_input, x_input)
-        x_input = torch.where(mask==4, x_input + torch.randn_like(x_input)*0.01, x_input)
+        # One randn over the whole sequence consumes a global-RNG offset proportional
+        # to train+test rows, so later global draws change when only the test set
+        # changes. Draw two fixed seeds, then sample each side from its own generator.
+        # Skip the draw entirely when mask 4 is absent; the seed count must not
+        # depend on how many cells are masked.
+        if (mask == 4).any():
+            eval_pos = int(data['eval_pos'])
+            seeds = torch.randint(
+                0,
+                2**31 - 1,
+                (2,),
+                dtype=torch.int64,
+                device=x_input.device,
+            )
+            train_seed, test_seed = (int(seed) for seed in seeds.tolist())
+            generator = torch.Generator(device=x_input.device)
+            generator.manual_seed(train_seed)
+            train_noise = torch.randn(
+                x_input[:, :eval_pos].shape,
+                device=x_input.device,
+                dtype=x_input.dtype,
+                generator=generator,
+            )
+            generator.manual_seed(test_seed)
+            test_noise = torch.randn(
+                x_input[:, eval_pos:].shape,
+                device=x_input.device,
+                dtype=x_input.dtype,
+                generator=generator,
+            )
+            noise = torch.cat((train_noise, test_noise), dim=1)
+            x_input = torch.where(mask == 4, x_input + noise * 0.01, x_input)
 
         if x_categorical_mask is not None:
             x_input = torch.where(x_categorical_mask.unsqueeze(1) & (mask==2), float('nan'), x_input)

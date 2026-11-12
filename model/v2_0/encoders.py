@@ -372,7 +372,8 @@ class ValidFeatureEncoder(nn.Module):
 
     def forward(self, input: dict[str, torch.Tensor | int]) -> dict[str, torch.Tensor]:
         x: torch.Tensor = input[self.in_keys[0]]  # type: ignore
-        valid_feature = ~torch.all(x == x[:, 0:1, :], dim=1)
+        x_train = x[:, :input['eval_pos']]
+        valid_feature = ~torch.all(x_train == x_train[:, 0:1, :], dim=1)
         self.valid_feature_num = torch.clip(valid_feature.sum(-1).unsqueeze(-1),
                                             min=1)
 
@@ -384,7 +385,7 @@ class ValidFeatureEncoder(nn.Module):
             if self.sqrt_normalize:
                 x = x * torch.sqrt(self.num_features / self.valid_feature_num).unsqueeze(1).expand_as(x)
             else:
-                x = x * (self.num_features / self.valid_feature_num)
+                x = x * (self.num_features / self.valid_feature_num).unsqueeze(1)
 
         zeros = torch.zeros(
             *x.shape[:-1],

@@ -2127,7 +2127,7 @@ class LimiXPredictor:
         ordinal_encoder = OrdinalEncoder(categories="auto",
                                         dtype=dtype,
                                         handle_unknown="use_encoded_value",
-                                        unknown_value=-1,
+                                        unknown_value=np.nan,
                                         encoded_missing_value=np.nan)
         col_encoder = ColumnTransformer(transformers=[("encoder", ordinal_encoder, make_column_selector(dtype_include=["category", "string", "bool"]))],
                                         remainder=FunctionTransformer(),
