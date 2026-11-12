@@ -13,11 +13,11 @@
 [![许可证](https://img.shields.io/badge/StableAI-License%20v1.0-green)](./LICENSE.txt)
 
 <div align="left" style="line-height: 1;">
-  <img src="https://api.iconify.design/mdi/translate.svg?color=%23555"
+  <img src="https://api.iconify.design/material-symbols/translate.svg?color=%23000000"
        width="24"
        height="24"
        alt="Language"
-       style="vertical-align: middle;" />
+       style="vertical-align: middle; border: none;" />
   &nbsp; English
   &nbsp;|
   <a href="README_cn.md">中文</a>
