@@ -10,4 +10,7 @@
 *.csv
 my_cache/
 result/
-.DS_Store
+.DS_Store*.npz
+build/
+dist/
+*.egg-info/
