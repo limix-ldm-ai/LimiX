@@ -11,7 +11,7 @@ import os, sys
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-from inference.predictor import LimiXPredictor
+from ldm_limix import LimiXPredictor
 
 def mask_prediction_eval(x_pred_:np.ndarray, x_true_:np.ndarray, mask:np.ndarray, categories: dict):
     # There are categorical variables that are not treated as categorical during inference      
@@ -114,14 +114,14 @@ categories = get_categorical_features_indices(X_train)
 
 data_device = f'cuda:0'
 
-model_path = hf_hub_download(repo_id="stableai-org/LimiX-2", filename="LimiX-2.ckpt", local_dir="./cache")
+model_path = hf_hub_download(repo_id="stable-ai/LimiX-2-1016", filename="LimiX-2-1016.ckpt", local_dir="./cache")
 
 testX, testX_original, nan_mask = gen_nan(X_test, 0.3)
 
 model = LimiXPredictor(
     device=torch.device(data_device),
     model_path=model_path,
-    inference_config=os.path.join(ROOT_DIR, "config", "reg_default_noretrieval_MVI_v2.json"),
+    inference_config=os.path.join(ROOT_DIR, "ldm_limix", "config", "reg_default_noretrieval_MVI_v2.json"),
 )
 reconstructed_X = model.predict(X_train, y_train, testX, task_type="Feature_imputation")
 mask_prediction_ = reconstructed_X[-X_test.shape[0]:].astype(X_test.dtype)

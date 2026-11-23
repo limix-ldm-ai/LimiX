@@ -24,8 +24,8 @@ from .preprocess import (
     FixedFeatureViewPreprocessor,
     resolve_fixed_feature_view_config,
 )
-from utils.loading import load_model, load_from_checkpoint
-from utils.categorical_encoding import FEATURE_ENCODER_MODES, encode_categorical_features
+from ldm_limix.utils.loading import load_model, load_from_checkpoint
+from ldm_limix.utils.categorical_encoding import FEATURE_ENCODER_MODES, encode_categorical_features
 import nvtx
 import copy
 import torch
@@ -689,7 +689,7 @@ class LimiXPredictor:
             gc.collect()
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-            from model.v2_0.autobatch import AutobatchConfig
+            from ldm_limix.model.v2_0.autobatch import AutobatchConfig
 
             worker_init_kwargs = dict(self._pipeline_worker_init_kwargs)
             worker_init_kwargs["_enable_autobatch"] = bool(
@@ -1198,7 +1198,7 @@ class LimiXPredictor:
                         task_type=task_type,
                     )
                     if os.environ.get("LDM_FWD_DEBUG") == "1" and start == 0:
-                        from model.v2_0.autobatch import AutobatchConfig
+                        from ldm_limix.model.v2_0.autobatch import AutobatchConfig
 
                         try:
                             ac_dtype = torch.get_autocast_dtype("cuda")

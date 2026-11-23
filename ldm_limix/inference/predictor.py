@@ -6,7 +6,7 @@ import torch
 import time
 import nvtx
 
-from model.version import resolve_arch_line, resolve_arch_version
+from ldm_limix.model.version import resolve_arch_line, resolve_arch_version
 
 
 def get_predictor_version(arch_version):
@@ -22,9 +22,9 @@ def get_predictor_version(arch_version):
     """
     line = resolve_arch_line(arch_version)
     if line == "v1_0":
-        from inference.v1_0.predictor import LimiXPredictor as predictor
+        from ldm_limix.inference.v1_0.predictor import LimiXPredictor as predictor
     else:
-        from inference.v2_0.predictor import LimiXPredictor as predictor
+        from ldm_limix.inference.v2_0.predictor import LimiXPredictor as predictor
     return predictor
 
 

@@ -1,7 +1,7 @@
 """Architecture router. Model implementations live in model.v1_0 and model.v2_0."""
-from model.v1_0.transformer import FeaturesTransformer as FeaturesTransformer_V1_0
-from model.v2_0.transformer import FeaturesTransformer as FeaturesTransformer_V2_0
-from model.version import resolve_arch_line
+from ldm_limix.model.v1_0.transformer import FeaturesTransformer as FeaturesTransformer_V1_0
+from ldm_limix.model.v2_0.transformer import FeaturesTransformer as FeaturesTransformer_V2_0
+from ldm_limix.model.version import resolve_arch_line
 
 FeaturesTransformer = FeaturesTransformer_V2_0
 

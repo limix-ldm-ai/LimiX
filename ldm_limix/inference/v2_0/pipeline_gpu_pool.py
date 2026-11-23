@@ -344,7 +344,7 @@ def pipeline_gpu_worker_main(
         import torch
 
         from .predictor import LimiXPredictor
-        from model.v2_0.autobatch import AutobatchConfig
+        from ldm_limix.model.v2_0.autobatch import AutobatchConfig
 
         kwargs = dict(init_kwargs)
         kwargs["device"] = _worker_torch_device(torch, gpu_id)

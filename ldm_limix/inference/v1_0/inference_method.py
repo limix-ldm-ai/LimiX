@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 from .data_utils import TabularInferenceDataset, cluster_test_data, fix_data_shape
 from .inference_utils import NonPaddingDistributedSampler, swap_rows_back
-from utils.loading import load_model
+from ldm_limix.utils.loading import load_model
 
 from .retrieval_utils import RelabelRetrievalY, find_top_K_indice
 import torch.distributed as dist

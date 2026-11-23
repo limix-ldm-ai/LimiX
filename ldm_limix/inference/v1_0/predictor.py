@@ -7,7 +7,7 @@ from .preprocess import (
     FingerprintFeatureEncoder,
     PolynomialInteractionGenerator,
     SubSampleData)
-from utils.loading import load_model, load_from_checkpoint
+from ldm_limix.utils.loading import load_model, load_from_checkpoint
 import torch
 from typing import List, Literal
 import random

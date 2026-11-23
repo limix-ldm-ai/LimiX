@@ -26,13 +26,13 @@ class ModelSpec:
 
 
 MODELS = [
-    ModelSpec("LimiX-V2.0", "LimiX-2.ckpt", "config/cls_default_noretrieval_v2.json", "config/reg_default_noretrieval_v2.json", True),
-    ModelSpec("LimiX-V1.5-7M", "LimiX-V1.5-7M.ckpt", "config/cls_default_noretrieval.json", "config/reg_default_noretrieval.json", False),
-    ModelSpec("LimiX-V1.5-16M", "LimiX-V1.5-16M.ckpt", "config/cls_default_noretrieval.json", "config/reg_default_noretrieval.json", False),
-    ModelSpec("LimiX-V1.5-64M", "LimiX-V1.5-64M.ckpt", "config/cls_default_noretrieval.json", "config/reg_default_noretrieval.json", False),
-    ModelSpec("LimiX-V1.1_64M", "LimiX-V1.1_64M.ckpt", "config/cls_default_noretrieval.json", "config/reg_default_noretrieval.json", False),
-    ModelSpec("LimiX-2M", "LimiX-2M.ckpt", "config/cls_default_noretrieval.json", "config/reg_default_noretrieval.json", False),
-    ModelSpec("LimiX-16M", "LimiX-16M.ckpt", "config/cls_default_noretrieval.json", "config/reg_default_noretrieval.json", False),
+    ModelSpec("LimiX-V2.0", "LimiX-2.ckpt", "ldm_limix/config/cls_default_noretrieval_v2.json", "ldm_limix/config/reg_default_noretrieval_v2.json", True),
+    ModelSpec("LimiX-V1.5-7M", "LimiX-V1.5-7M.ckpt", "ldm_limix/config/cls_default_noretrieval.json", "ldm_limix/config/reg_default_noretrieval.json", False),
+    ModelSpec("LimiX-V1.5-16M", "LimiX-V1.5-16M.ckpt", "ldm_limix/config/cls_default_noretrieval.json", "ldm_limix/config/reg_default_noretrieval.json", False),
+    ModelSpec("LimiX-V1.5-64M", "LimiX-V1.5-64M.ckpt", "ldm_limix/config/cls_default_noretrieval.json", "ldm_limix/config/reg_default_noretrieval.json", False),
+    ModelSpec("LimiX-V1.1_64M", "LimiX-V1.1_64M.ckpt", "ldm_limix/config/cls_default_noretrieval.json", "ldm_limix/config/reg_default_noretrieval.json", False),
+    ModelSpec("LimiX-2M", "LimiX-2M.ckpt", "ldm_limix/config/cls_default_noretrieval.json", "ldm_limix/config/reg_default_noretrieval.json", False),
+    ModelSpec("LimiX-16M", "LimiX-16M.ckpt", "ldm_limix/config/cls_default_noretrieval.json", "ldm_limix/config/reg_default_noretrieval.json", False),
 ]
 
 
@@ -47,7 +47,7 @@ def job_cmd(model: ModelSpec, task: str, device: str, gpuid: int | None) -> tupl
         data = DATA / ("cls_gpu10" if is_cls else "reg_gpu10")
         save = f"gpu_cpu_check/gpu/{model.save_stem}_{suffix}"
     cmd = [
-        sys.executable, str(ROOT / "infer.py"),
+        sys.executable, "-m", "ldm_limix.infer",
         "--task_type", task,
         "--model_path", str(CKPT_DIR / model.ckpt),
         "--data_dir", str(data),

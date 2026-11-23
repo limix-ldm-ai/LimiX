@@ -224,7 +224,7 @@ LimiX-2 在三大基准上均取得最高 Elo，超越所有对比的基础模�
 
 ### ➩ 安装
 
-需要 Python >= 3.12，其余 Python 依赖通过 `pip install -e .` 安装（包含 `torch>=2.9.1`）。`torch` / `flash-attn` 需与本机 CUDA 版本匹配，可在步骤 1（可选）中先行安装。
+需要 Python >= 3.12。PyPI 发行名为 `ldm-limix`，导入包名是 `ldm_limix`：`from ldm_limix import LimiXPredictor`。`torch` / `flash-attn` 需与本机 CUDA 版本匹配，可在步骤 1（可选）中先行安装。
 
 #### 步骤 1（可选）：安装 PyTorch 与 flash-attn
 
@@ -241,7 +241,15 @@ wget -O flash_attn.whl https://github.com/Dao-AILab/flash-attention/releases/dow
 pip install flash_attn.whl
 ```
 
-#### 步骤 2：以可编辑模式安装
+#### 步骤 2：安装 `ldm-limix`
+
+从 PyPI 安装：
+
+```bash
+python -m pip install ldm-limix
+```
+
+从本地仓库以可编辑模式安装：
 
 ```bash
 git clone https://github.com/limix-ldm-ai/LimiX.git
@@ -249,17 +257,17 @@ cd LimiX
 python -m pip install -e .
 ```
 
-该命令会安装 `LimiX-infer` 命令行入口，并使 `from inference.predictor import LimiXPredictor` / `from limix import LimiXPredictor` 在任意工作目录下均可导入。若步骤 1 中已安装 `torch==2.9.1`，此处会直接复用该构建。
+两条命令都会安装 `LimiX-infer` 命令行入口，并使 `from ldm_limix import LimiXPredictor` 在任意工作目录下均可导入。若步骤 1 中已安装 `torch==2.9.1`，此处会直接复用该构建。
 
 <br/>
 
 ## ➤ 推理
 
-LimiX 支持分类、回归与缺失值插补。统一的推理入口为 `inference.predictor.LimiXPredictor`，它会根据 checkpoint 的架构版本路由到 `v1_0` / `v2_0`。请使用与模型匹配的配置（LimiX-2 / V2.0 使用 `*_v2.json`）。
+LimiX 支持分类、回归与缺失值插补。统一的推理入口为 `ldm_limix.LimiXPredictor`，它会根据 checkpoint 的架构版本路由到 `v1_0` / `v2_0`。请使用与模型匹配的配置（LimiX-2 / V2.0 使用 `*_v2.json`）。
 
 ### ➩ 命令行：`LimiX-infer`
 
-执行 `pip install -e .` 后，`LimiX-infer` 与 `python infer.py` 是同一入口。必填参数：`--task_type`、`--data_dir`、`--model_path`。若未指定 `--inference_config_path`，将按任务类型与 checkpoint 版本选择内置的默认配置（V2.0 使用 `*_v2.json`）。
+执行 `pip install ldm-limix`（或在仓库内执行 `pip install -e .`）后，`LimiX-infer` 与 `python -m ldm_limix.infer` 是同一入口。必填参数：`--task_type`、`--data_dir`、`--model_path`。若未指定 `--inference_config_path`，将按任务类型与 checkpoint 版本选择内置的默认配置（V2.0 使用 `*_v2.json`）。
 
 `--data_dir` 为基准数据根目录：每个数据集一个子目录，可参考公开的 [bcco_cls](https://huggingface.co/datasets/stable-ai/bcco_cls) / [bcco_reg](https://huggingface.co/datasets/stable-ai/bcco_reg) 目录结构。缺少所需 CSV 的子目录会被跳过。
 
@@ -307,7 +315,7 @@ LimiX-infer --task_type Feature_imputation --data_dir /path/to/mvi_data --model_
 #### 模型创建
 
 ```python
-from inference.predictor import LimiXPredictor
+from ldm_limix import LimiXPredictor
 
 class LimiXPredictor:
     def __init__(self,
@@ -407,7 +415,7 @@ os.environ["MASTER_PORT"] = "29500"
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-from inference.predictor import LimiXPredictor
+from ldm_limix import LimiXPredictor
 
 X, y = load_breast_cancer(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
@@ -417,7 +425,7 @@ model_file = hf_hub_download(repo_id="stable-ai/LimiX-2", filename="LimiX-2.ckpt
 clf = LimiXPredictor(
     device=torch.device("cuda"),
     model_path=model_file,
-    inference_config=os.path.join(ROOT_DIR, "config", "cls_default_noretrieval_v2.json"),
+    inference_config=os.path.join(ROOT_DIR, "ldm_limix", "config", "cls_default_noretrieval_v2.json"),
 )
 prediction = clf.predict(X_train, y_train, X_test, task_type="Classification")
 
@@ -453,7 +461,7 @@ os.environ["MASTER_PORT"] = "29500"
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-from inference.predictor import LimiXPredictor
+from ldm_limix import LimiXPredictor
 
 X, y = load_diabetes(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
@@ -463,7 +471,7 @@ model_path = hf_hub_download(repo_id="stable-ai/LimiX-2", filename="LimiX-2.ckpt
 model = LimiXPredictor(
     device=torch.device("cuda"),
     model_path=model_path,
-    inference_config=os.path.join(ROOT_DIR, "config", "reg_default_noretrieval_v2.json"),
+    inference_config=os.path.join(ROOT_DIR, "ldm_limix", "config", "reg_default_noretrieval_v2.json"),
 )
 y_pred = model.predict(X_train, y_train, X_test, task_type="Regression")
 
@@ -482,7 +490,7 @@ print(f"R2: {r2}")
 model = LimiXPredictor(
     device=torch.device("cuda"),
     model_path=model_path,
-    inference_config=os.path.join(ROOT_DIR, "config", "reg_default_noretrieval_MVI_v2.json"),
+    inference_config=os.path.join(ROOT_DIR, "ldm_limix", "config", "reg_default_noretrieval_MVI_v2.json"),
 )
 reconstructed_X = model.predict(X_train, y_train, x_test_with_nan, task_type="Feature_imputation")
 ```

@@ -5,7 +5,7 @@ Routes by --task_type and checkpoint arch_version (V1.0 / V2.0).
 V2.0 keeps inner ensemble multi-GPU via --gpu_num_per_predictor.
 V1.0 only uses outer process scheduling (one GPU per worker).
 
-Do not name this file inference.py: that would shadow the inference/ package.
+Do not name this file inference.py: that would shadow the ldm_limix.inference package.
 """
 import os
 
@@ -13,12 +13,12 @@ os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
 import argparse
 
-from utils.inference_unified import (
+from ldm_limix.utils.inference_unified import (
     MASK_RATIO_CHOICES,
     normalize_task_type,
     run_unified_inference,
 )
-from utils.categorical_encoding import FEATURE_ENCODER_MODES
+from ldm_limix.utils.categorical_encoding import FEATURE_ENCODER_MODES
 
 _REGRESSION_DECODER_TYPES = ("mse", "bucket", "bucket_4_tabpfn")
 

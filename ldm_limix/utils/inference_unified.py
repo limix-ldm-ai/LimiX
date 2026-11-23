@@ -32,10 +32,10 @@ except ImportError:
 
     mean_squared_error = partial(mean_squared_error, squared=False)
 
-import config as config_pkg
-from inference.predictor import LimiXPredictor
-from model.version import resolve_arch_line, resolve_arch_version
-from utils.inference_subprocess_v2 import (
+import ldm_limix.config as config_pkg
+from ldm_limix.inference.predictor import LimiXPredictor
+from ldm_limix.model.version import resolve_arch_line, resolve_arch_version
+from ldm_limix.utils.inference_subprocess_v2 import (
     ModelInitError,
     enrich_worker_result,
     is_cuda_context_corrupted,
@@ -47,8 +47,8 @@ from utils.inference_subprocess_v2 import (
 )
 
 CPU_DEVICE_SLOT = -1
-from utils.inference_utils import auc_metric, sample_inferece_params
-from utils.categorical_encoding import FEATURE_ENCODER_MODES, encode_categorical_features
+from ldm_limix.utils.inference_utils import auc_metric, sample_inferece_params
+from ldm_limix.utils.categorical_encoding import FEATURE_ENCODER_MODES, encode_categorical_features
 
 try:
     import nvtx
@@ -515,9 +515,9 @@ def peek_arch_line(model_path: str):
 
 def apply_autobatch_flag(arch_line: str, enabled: bool) -> None:
     if arch_line == "v1_0":
-        from model.v1_0.autobatch import AutobatchConfig
+        from ldm_limix.model.v1_0.autobatch import AutobatchConfig
     elif arch_line == "v2_0":
-        from model.v2_0.autobatch import AutobatchConfig
+        from ldm_limix.model.v2_0.autobatch import AutobatchConfig
     else:
         raise ValueError(f"Unsupported arch_line={arch_line!r}; expected v1_0 or v2_0")
     AutobatchConfig.ENABLE_AUTOBATCH = bool(enabled)

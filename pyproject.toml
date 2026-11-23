@@ -1,14 +1,33 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "LimiX"
+name = "ldm-limix"
 version = "2.0.0"
 description = "LimiX tabular foundation model inference"
 readme = "README.md"
 requires-python = ">=3.12"
-license = { file = "LICENSE.txt" }
+license = "LicenseRef-StableAI-LimiX-1.0"
+license-files = ["LICENSE.txt"]
+authors = [
+    { name = "Stable AI Technology Co., Ltd." },
+]
+keywords = [
+    "LimiX",
+    "tabular",
+    "foundation-model",
+    "inference",
+    "classification",
+    "regression",
+]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
     "torch>=2.9.1",
     "numpy",
@@ -24,21 +43,24 @@ dependencies = [
     "joblib",
 ]
 
+[project.urls]
+Homepage = "https://www.limix.ai/"
+Repository = "https://github.com/limix-ldm-ai/LimiX"
+Issues = "https://github.com/limix-ldm-ai/LimiX/issues"
+
 [project.scripts]
-LimiX-infer = "infer:main"
+LimiX-infer = "ldm_limix.infer:main"
 
 [tool.setuptools]
-py-modules = ["infer"]
 include-package-data = false
-license-files = ["LICENSE.txt"]
 
 [tool.setuptools.packages.find]
-include = ["inference*", "model*", "utils*", "limix*", "config*"]
+include = ["ldm_limix*"]
 exclude = ["build*", "*.egg-info*", "*.__pycache__*"]
 namespaces = false
 
 [tool.setuptools.package-data]
-config = ["*.json"]
+"ldm_limix.config" = ["*.json"]
 
 [tool.setuptools.exclude-package-data]
 "*" = ["*.pyc", "*.pyo", "*__pycache__*"]

@@ -1,13 +1,8 @@
 include LICENSE.txt
 include README.md
 include README_cn.md
-include infer.py
 include pyproject.toml
-graft inference
-graft model
-graft utils
-graft limix
-graft config
+graft ldm_limix
 prune examples
 prune .git
 prune result

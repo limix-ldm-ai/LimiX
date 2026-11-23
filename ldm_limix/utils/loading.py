@@ -2,15 +2,15 @@
 
 Implementation lives in model.v1_0.loading and model.v2_0.loading.
 """
-from model.version import resolve_arch_line, resolve_arch_version
+from ldm_limix.model.version import resolve_arch_line, resolve_arch_version
 
 
 def _loading_module(arch_version):
     line = resolve_arch_line(arch_version)
     if line == "v1_0":
-        from model.v1_0 import loading as loading_mod
+        from ldm_limix.model.v1_0 import loading as loading_mod
     else:
-        from model.v2_0 import loading as loading_mod
+        from ldm_limix.model.v2_0 import loading as loading_mod
     return loading_mod
 
 
