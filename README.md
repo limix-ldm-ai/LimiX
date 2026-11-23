@@ -27,6 +27,7 @@
 
 ## 🚀 News
 
+- **[10 Nov 2026] 🚀 LimiX-2-1016 open-source release.** The LimiX-2 weights ([`LimiX-2-1016.ckpt`](https://huggingface.co/stable-ai/LimiX-2-1016/tree/main)) are released, and the package can now be installed directly with pip.
 - **[16 Sept 2026] 🚀 LimiX-2 open-source release.** The LimiX-2 weights ([`LimiX-2.ckpt`](https://huggingface.co/stable-ai/LimiX-2/tree/main)) and inference code are released with this repository. A single pretrained model performs classification, regression and missing-value imputation in one forward pass, without task-specific parameter updates. Usage is subject to [StableAI LimiX Non-Commercial License](https://huggingface.co/stableai-org/LimiX-2/blob/main/LICENSE). The LimiX-2 technical report is released as well, please check the [arxiv archive](https://arxiv.org/abs/2609.17488) or [LimiX_2_Technical_Report.pdf](https://github.com/limix-ldm-ai/LimiX/blob/main/LimiX_2_Technical_Report.pdf).
 - **[4 June 2026] 🧠 Follow-up LimiX research accepted by ICML!**
   Paper: [LimiX-2M](https://arxiv.org/abs/2606.04485). This work extends the original [LimiX](https://arxiv.org/abs/2509.03505) structured-data foundation model. 
@@ -59,6 +60,7 @@ LimiX-2 is the new-generation model of the LimiX family, developed through model
 
 | Model | Parameters | Release date | Download link | Tasks supported |
 | ----------- | ------------ | ------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
+| LimiX-2-1016 | 400M | 10 Nov 2026 | [LimiX-2-1016.ckpt](https://huggingface.co/stable-ai/LimiX-2-1016/tree/main) | ✅ cls ✅ reg ✅ imputation |
 | LimiX-2 | 400M | 16 Sept 2026 | [LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main) | ✅ cls ✅ reg ✅ imputation |
 | LimiX-2M | 2M | 10 Nov 2025 | [LimiX-2M.ckpt](https://huggingface.co/stable-ai/LimiX-1_2M/tree/main) | ✅ cls ✅ reg ✅ imputation |
 | LimiX-16M | 16M | 29 Aug 2025 | [LimiX-16M.ckpt](https://huggingface.co/stable-ai/LimiX-1_16M/tree/main) | ✅ cls ✅ reg ✅ imputation |
@@ -81,22 +83,22 @@ LimiX-2 achieves the highest Elo rating on all three benchmarks, outperforming a
 
 ### ➩ TabArena
 
-On the full TabArena benchmark, LimiX-2 ranks first across all four predictive metrics, attaining an Elo of **1935** (117.4 points above the runner-up TabFM+ before rounding), an improvability of **3.3%**, an average rank of **5.5**, and an aggregated win count of **18.9** (≈3.6× TabFM+).
+On the full TabArena benchmark, LimiX-2 ranks first across all four predictive metrics, attaining an Elo of **1963** (147 points above the runner-up TabFM+), an improvability of **3.6%**, an average rank of **5.0**, and an aggregated win count of **21.7** (≈4.3× TabFM+).
 
 <div align="center">
 
 | Model | Elo ↑ | Improv. ↓ | Rank ↓ | Wins ↑ |
 | --- | --- | --- | --- | --- |
-| **LimiX-2 (D)** | **1935** | **3.3%** | **5.5** | **18.9** |
-| TabFM+ | 1818 | 6.2% | 9.0 | 5.3 |
-| Causilo (D) | 1790 | 8.9% | 10.1 | 1.7 |
-| AutoGluon 1.6 (NC, 4h) | 1789 | 8.6% | 10.1 | 1.2 |
-| TabFM (D) | 1774 | 6.5% | 10.7 | 5.9 |
-| Mitra-v2 (D) | 1769 | 8.3% | 10.9 | 3.2 |
-| EXAONE Tabular (D) | 1749 | 9.5% | 11.8 | 2.9 |
-| AutoGluon 1.6 (EX, 4h) | 1738 | 9.2% | 12.3 | 1.2 |
-| AutoGluon 1.5 (EX, 4h) | 1648 | 10.2% | 16.9 | 1.3 |
-| TabPFN-3 (D) | 1632 | 11.6% | 17.9 | 0.4 |
+| **LimiX-2 (D)** | **1963** | **3.6%** | **5.0** | **21.7** |
+| TabFM+ | 1816 | 6.4% | 9.1 | 5.1 |
+| Causilo (D) | 1788 | 9.1% | 10.1 | 1.3 |
+| AutoGluon 1.6 (NC, 4h) | 1787 | 8.8% | 10.2 | 0.9 |
+| TabFM (D) | 1772 | 6.7% | 10.7 | 5.0 |
+| Mitra-v2 (D) | 1768 | 8.5% | 10.9 | 3.0 |
+| EXAONE Tabular (D) | 1746 | 9.7% | 11.9 | 1.5 |
+| AutoGluon 1.6 (EX, 4h) | 1737 | 9.4% | 12.3 | 0.8 |
+| AutoGluon 1.5 (EX, 4h) | 1647 | 10.4% | 16.9 | 1.0 |
+| TabPFN-3 (D) | 1631 | 11.8% | 17.9 | 0.4 |
 
 </div>
 
@@ -114,7 +116,7 @@ LimiX-2 also ranks first on both the classification (38 datasets, Table 3) and r
 <div align="center">
   <img src="https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig4_tabarena_elo.png" alt="Figure 4: Performance on the TabArena benchmark" width="100%">
   <br>
-  <sub>Performance on the TabArena benchmark. Baseline results cover default, tuned, and tuned-plus-ensembled configurations; LimiX-2 under the default configuration attains an Elo of 1935, outperforming all compared foundation models and AutoGluon under its noncommercial 4h configuration.</sub>
+  <sub>Performance on the TabArena benchmark. Baseline results cover default, tuned, and tuned-plus-ensembled configurations; LimiX-2 under the default configuration attains an Elo of 1963, outperforming all compared foundation models and AutoGluon under its noncommercial 4h configuration.</sub>
 </div>
 
 <div align="center">
@@ -125,20 +127,20 @@ LimiX-2 also ranks first on both the classification (38 datasets, Table 3) and r
 
 ### ➩ TALENT
 
-On TALENT, LimiX-2 achieves the highest Elo across all five evaluation categories, with an overall Elo of **1506** (35 points above TabFM), an improvability of **6.75%**, and an aggregated win count of **84.3** (≈1.7× TabFM).
+On TALENT, LimiX-2 attains an overall Elo of **1510** (39 points above TabFM) and the highest Elo on classification, regression, and binary classification, with a multiclass Elo of 1517 (TabFM leads this split at 1518). Improvability is **6.75%**, and the aggregated win count is **89.5** (≈1.9× TabFM).
 
 <div align="center">
 
 | Model | Elo | CLS | REG | Binary | Multi | Improv. ↓ | Wins ↑ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| **LimiX-2** | **1506** | **1475** | **1584** | **1455** | **1520** | **6.75%** | **84.3** |
-| TabFM | 1471 | 1449 | 1529 | 1418 | 1517 | 9.17% | 50.1 |
-| AutoGluon 1.6 | 1438 | 1379 | 1581 | 1340 | 1465 | 11.21% | 48.0 |
-| EXAONE Tabular | 1393 | 1358 | 1477 | 1370 | 1342 | 14.74% | 12.9 |
-| TabPFN-3 | 1363 | 1331 | 1441 | 1333 | 1331 | 15.98% | 15.7 |
-| LimiX-16M | 1227 | 1210 | 1268 | 1217 | 1198 | 20.52% | 6.1 |
-| CatBoost | 1094 | 1094 | 1094 | 1107 | 1073 | 26.84% | 4.9 |
-| RandomForest | 1000 | 1000 | 1000 | 1000 | 1000 | 30.06% | 3.8 |
+| **LimiX-2** | **1510** | **1466** | **1621** | **1444** | 1517 | **6.75%** | **89.5** |
+| TabFM | 1471 | 1449 | 1531 | 1417 | **1518** | 9.39% | 46.6 |
+| AutoGluon 1.6 | 1438 | 1380 | 1583 | 1339 | 1468 | 11.51% | 47.8 |
+| EXAONE Tabular | 1393 | 1357 | 1479 | 1369 | 1341 | 15.00% | 12.3 |
+| TabPFN-3 | 1364 | 1331 | 1442 | 1333 | 1332 | 15.89% | 15.1 |
+| LimiX-16M | 1228 | 1210 | 1269 | 1217 | 1199 | 20.35% | 6.4 |
+| CatBoost | 1094 | 1095 | 1094 | 1107 | 1073 | 26.86% | 4.3 |
+| RandomForest | 1000 | 1000 | 1000 | 1000 | 1000 | 30.08% | 3.8 |
 
 </div>
 
@@ -156,20 +158,20 @@ On TALENT, LimiX-2 achieves the highest Elo across all five evaluation categorie
 
 ### ➩ BCCO
 
-On BCCO, LimiX-2 ranks first overall with an Elo of **1432** (56 / 63 / 202 points above AutoGluon 1.6 (EX, 4h), TabFM, and LimiX-16M), an improvability of **6.97%**, and an aggregated win count of **50.4** (≈3.0× TabFM).
+On BCCO, LimiX-2 ranks first overall with an Elo of **1439** (64 / 71 / 209 points above AutoGluon 1.6 (EX, 4h), TabFM, and LimiX-16M), an improvability of **6.79%**, and an aggregated win count of **51.2** (≈3.3× TabFM).
 
 <div align="center">
 
 | Model | Elo | CLS | REG | Binary | Multi | Improv. ↓ | Wins ↑ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| **LimiX-2** | **1432** | **1321** | **1859** | **1284** | 1414 | **6.97%** | **50.4** |
-| AutoGluon 1.6 | 1376 | 1269 | 1782 | 1199 | **1443** | 9.77% | 24.5 |
-| TabFM | 1369 | 1260 | 1785 | 1213 | 1374 | 12.24% | 16.7 |
-| EXAONE Tabular | 1345 | 1255 | 1689 | 1224 | 1333 | 13.40% | 7.8 |
-| TabPFN-3 | 1295 | 1188 | 1691 | 1153 | 1275 | 14.92% | 5.7 |
-| LimiX-16M | 1230 | 1195 | 1385 | 1173 | 1252 | 16.94% | 6.1 |
-| CatBoost | 1140 | 1101 | 1287 | 1096 | 1118 | 21.64% | 4.6 |
-| RandomForest | 1000 | 1000 | 1000 | 1000 | 1000 | 26.75% | 2.3 |
+| **LimiX-2** | **1439** | **1320** | **1902** | **1269** | **1447** | **6.79%** | **51.2** |
+| AutoGluon 1.6 | 1375 | 1269 | 1781 | 1199 | 1445 | 9.88% | 23.6 |
+| TabFM | 1368 | 1259 | 1786 | 1212 | 1376 | 12.22% | 15.3 |
+| EXAONE Tabular | 1343 | 1253 | 1689 | 1221 | 1334 | 13.24% | 7.8 |
+| TabPFN-3 | 1295 | 1188 | 1692 | 1154 | 1275 | 14.40% | 5.9 |
+| LimiX-16M | 1230 | 1194 | 1385 | 1172 | 1253 | 16.32% | 6.3 |
+| CatBoost | 1139 | 1100 | 1286 | 1095 | 1118 | 21.72% | 4.6 |
+| RandomForest | 1000 | 1000 | 1000 | 1000 | 1000 | 26.72% | 2.6 |
 
 </div>
 
@@ -193,11 +195,11 @@ The scaling study evaluates LimiX-2 configurations ranging from 12.5M to 406.2M 
 
 | Evaluation Task | α (Elo @100M) | β (Elo / doubling) | R² | RMSE |
 | --- | --- | --- | --- | --- |
-| TabArena | 1863.88 | 34.68 | 0.9808 | 8.31 |
-| TALENT classification | 1427.25 | 22.16 | 0.9792 | 5.53 |
-| TALENT regression | 1545.12 | 18.26 | 0.9680 | 5.69 |
-| BCCO classification | 1295.86 | 11.24 | 0.9617 | 3.84 |
-| BCCO regression | 1795.89 | 30.06 | 0.9702 | 9.03 |
+| TabArena | 1950.46 | 45.73 | 0.9570 | 16.60 |
+| TALENT classification | 1434.61 | 26.37 | 0.9530 | 10.04 |
+| TALENT regression | 1618.26 | 19.07 | 0.8848 | 11.79 |
+| BCCO classification | 1304.28 | 16.76 | 0.9038 | 9.37 |
+| BCCO regression | 1869.14 | 35.19 | 0.9128 | 18.64 |
 
 </div>
 

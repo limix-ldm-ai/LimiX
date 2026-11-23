@@ -1,226 +1,173 @@
-<div align="left">
-  <img src="./doc/LimiX-Logo.png" alt="LimiX-2" width="105%">
-</div>
+![LimiX-2](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/LimiX-Logo.png)
 
 ## LimiX：面向结构化数据的大型基础模型（LDM）
-[![preprint](https://img.shields.io/static/v1?label=LimiX-2-技术报告&message=2609.17488&color=B31B1B&logo=arXiv)](https://arxiv.org/abs/2609.17488)
-[![preprint](https://img.shields.io/static/v1?label=LimiX-2M-论文&message=2606.04485&color=B31B1B&logo=arXiv)](https://arxiv.org/abs/2606.04485)
-[![preprint](https://img.shields.io/static/v1?label=LimiX-技术报告&message=2509.03505&color=B31B1B&logo=arXiv)](https://arxiv.org/abs/2509.03505)
-[![项目主页](https://img.shields.io/badge/LimiX-项目主页-green)](https://www.limix.ai/)
-[![GitHub](https://img.shields.io/badge/GitHub-limiX--ldm%2FLimiX-181717)](https://github.com/limix-ldm/LimiX/)
-[![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-stableai--ai-4285F4)](https://huggingface.co/stable-ai/)
-[![ModelScope](https://img.shields.io/badge/ModelScope-stable--ai-f58c20)](https://modelscope.cn/organization/stable-ai/)
-[![许可证](https://img.shields.io/badge/StableAI-License%20v1.0-green)](./LICENSE.txt)
 
-<div align="left" style="line-height: 1;">
-  <img src="https://api.iconify.design/material-symbols/translate.svg?color=%23000000"
-       width="24"
-       height="24"
-       alt="Language"
-       style="vertical-align: middle; border: none;" />
-  &nbsp; <a href="README.md">English</a>
-  &nbsp;| 中文
-</div>
+![preprint](https://img.shields.io/static/v1?label=LimiX-2-技术报告&message=2609.17488&color=B31B1B&logo=arXiv)
+![preprint](https://img.shields.io/static/v1?label=LimiX-2M-论文&message=2606.04485&color=B31B1B&logo=arXiv)
+![preprint](https://img.shields.io/static/v1?label=LimiX-技术报告&message=2509.03505&color=B31B1B&logo=arXiv)
+![项目主页](https://img.shields.io/badge/LimiX-项目主页-green)
+![GitHub](https://img.shields.io/badge/GitHub-limiX--ldm%2FLimiX-181717)
+![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-stableai--ai-4285F4)
+![ModelScope](https://img.shields.io/badge/ModelScope-stable--ai-f58c20)
+![许可证](https://img.shields.io/badge/StableAI-License%20v1.0-green)
 
-<br/>
+![Language](https://api.iconify.design/material-symbols/translate.svg?color=%23000000)   [English](README.md)  | 中文
 
 ## :🚀 更新动态
 
-- **[2026.09.16] 🚀 LimiX-2 开源发布。** LimiX-2 权重（[`LimiX-2.ckpt`](https://huggingface.co/stable-ai/LimiX-2/tree/main)）与推理代码随本仓库一同发布。单个预训练模型在一次前向传播中即可完成分类、回归、缺失值插补，无需任务专属的参数更新。使用需遵循 [非商用许可协议](https://huggingface.co/stableai-org/LimiX-2/blob/main/LICENSE)。LimiX-2 技术报告正式发布，详见 [arxiv archive](https://arxiv.org/abs/2609.17488) 或 [LimiX_2_Technical_Report.pdf](./LimiX_2_Technical_Report.pdf)。
+- **[2026.11.10] 🚀 LimiX-2-1016 开源发布。** LimiX-2 权重(`[LimiX-2-1016.ckpt](https://huggingface.co/stable-ai/LimiX-2-1016/tree/main)`) 发布，并支持pip直接安装。
+- **[2026.09.16] 🚀 LimiX-2 开源发布。** LimiX-2 权重（`[LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main)`）与推理代码随本仓库一同发布。单个预训练模型在一次前向传播中即可完成分类、回归、缺失值插补，无需任务专属的参数更新。使用需遵循 [非商用许可协议](https://huggingface.co/stableai-org/LimiX-2/blob/main/LICENSE)。LimiX-2 技术报告正式发布，详见 [arxiv archive](https://arxiv.org/abs/2609.17488) 或 [LimiX_2_Technical_Report.pdf](https://github.com/limix-ldm-ai/LimiX/blob/main/LimiX_2_Technical_Report.pdf)。
 - **[2026.06.04] 🧠 LimiX 后续延伸研究成果被 ICML 会议录用！**
-  论文：[LimiX-2M](https://arxiv.org/abs/2606.04485)，该工作是初代 [LimiX](https://arxiv.org/abs/2509.03505) 结构化数据基础模型的拓展研究。
+论文：[LimiX-2M](https://arxiv.org/abs/2606.04485)，该工作是初代 [LimiX](https://arxiv.org/abs/2509.03505) 结构化数据基础模型的拓展研究。
 - **[2025.11.10] 🚀 LimiX-2M 轻量化模型正式发布！**
-  相较LimiX-16M版本，该轻量模型大幅降低GPU显存占用、提升推理速度；同时优化检索机制，在缩减推理耗时与内存开销的前提下进一步提升模型效果。
+相较LimiX-16M版本，该轻量模型大幅降低GPU显存占用、提升推理速度；同时优化检索机制，在缩减推理耗时与内存开销的前提下进一步提升模型效果。
 - **[2025.09.03] 🧠 LimiX 论文于arXiv上线发布**
-  原论文：[arXiv:2509.03505](https://arxiv.org/abs/2509.03505)，LimiX是面向通用智能的首款结构化数据大模型，项目基于Apache 2.0协议开源。
+原论文：[arXiv:2509.03505](https://arxiv.org/abs/2509.03505)，LimiX是面向通用智能的首款结构化数据大模型，项目基于Apache 2.0协议开源。
 - **[2025.08.29] 🚀 LimiX V1.0 正式发布**
-  LimiX结构化数据基础模型首个稳定官方版本开源上线。
+LimiX结构化数据基础模型首个稳定官方版本开源上线。
+
+
 
 ## ✨ LimiX-2 模型架构与预训练数据
+
 LimiX-2 是 LimiX 家族中的新一代模型，它是基于我们此前确立的缩放定律（scaling laws），通过模型与数据规模扩展而开发的。LimiX-2 采用了上下文机制网络（CMN）范式，并利用上下文条件掩码建模（CCMM）进行预训练。CMN 将上下文学习（in-context learning）的组织原则从以目标为中心的预测，转变为以机制为导向的联合建模。该模型并非围绕传统表格型 PFN（先验拟合网络）中常见的  `p(y | x, D_context)` 目标进行构建，而是致力于学习 `p(x, y | D_context)`——即一种表征数据生成背后联合结构的、依赖于上下文的表示。预训练阶段使用了由结构因果模型（SCM）生成的合成数据集，这些数据集涵盖了多种图结构、函数机制及观测过程。在 TabArena、TALENT 和 BCCO 上的评估结果表明，LimiX-2 的表现优于现有的特定数据集模型及表格数据基础模型。除了预测性能外，CMN 范式还赋予了 LimiX-2 因果感知能力：其特征注意力机制能够编码直接因果关系，从而实现对因果骨架（causal skeleton）的精确恢复。
 
-<div align="center">
-  <img src="./doc/figures/fig2_architecture.png" alt="图 2：LimiX-2 整体结构" width="80%">
-  <br>
-  <sub>LimiX-2 模型架构</sub>
-</div>
+![图 2：LimiX-2 整体结构](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig2_architecture.png)  
+LimiX-2 模型架构
 
-<div align="center">
-  <img src="./doc/figures/fig3_data_generation.png" alt="图 3：预训练合成数据生成流程" width="80%">
-  <br>
-  <sub>预训练合成数据生成流程</sub>
-</div>
+![图 3：预训练合成数据生成流程](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig3_data_generation.png)  
+预训练合成数据生成流程
 
 ### ➩ 模型下载
 
-<div align="center">
 
-| 模型        | 参数量 | 发布日期   | 下载链接                                                                      | 支持的任务                 |
-| ----------- | ------ | ---------- | ----------------------------------------------------------------------------- | -------------------------- |
-| LimiX-2     | 400M   | 2026-09-16 | [LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main)             | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
-| LimiX-1_2M  | 2M     | 2025-11-10 | [LimiX-1_2M.ckpt](https://huggingface.co/stable-ai/LimiX-1_2M/tree/main)       | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
-| LimiX-1_16M | 16M    | 2025-08-29 | [LimiX-1_16M.ckpt](https://huggingface.co/stable-ai/LimiX-1_16M/tree/main)     | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+| 模型           | 参数量  | 发布日期       | 下载链接                                                                       | 支持的任务             |
+| ------------ | ---- | ---------- | -------------------------------------------------------------------------- | ----------------- |
+| LimiX-2-1016 | 400M | 2026-11-10 | [LimiX-2-1016.ckpt](https://huggingface.co/stable-ai/LimiX-2-1016/tree/main)         | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+| LimiX-2      | 400M | 2026-09-16 | [LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main)         | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+| LimiX-1_2M   | 2M   | 2025-11-10 | [LimiX-1_2M.ckpt](https://huggingface.co/stable-ai/LimiX-1_2M/tree/main)   | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+| LimiX-1_16M  | 16M  | 2025-08-29 | [LimiX-1_16M.ckpt](https://huggingface.co/stable-ai/LimiX-1_16M/tree/main) | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
 
-</div>
 
-<br/>
+
 
 ## 📈 Benchmark 结果
+
+
 
 ### ➩ 总体 Elo
 
 LimiX-2 在三大基准上均取得最高 Elo，超越所有对比的基础模型与 AutoGluon 1.6。
 
-<div align="center">
-  <img src="./doc/figures/fig1_performance_overview.png" alt="图 1：各基准性能总览" width="105%">
-  <br>
-  <sub>各基准性能总览</sub>
-</div>
+![图 1：各基准性能总览](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig1_performance_overview.png)  
+各基准性能总览
 
 ### ➩ TabArena
 
-在完整的 TabArena 基准上，LimiX-2 在全部四项预测指标上均排名第一，取得 **1935** 的 Elo（取整前高出第二名 TabFM+ 117.4 分）、**3.3%** 的可改进度（improvability）、**5.5** 的平均排名与 **18.9** 的聚合胜场（约为 TabFM+ 的 3.6 倍）。
+在完整的 TabArena 基准上，LimiX-2 在全部四项预测指标上均排名第一，取得 **1963** 的 Elo（高出第二名 TabFM+ 147 分）、**3.6%** 的可改进度（improvability）、**5.0** 的平均排名与 **21.7** 的聚合胜场（约为 TabFM+ 的 4.3 倍）。
 
-<div align="center">
 
-| 模型 | Elo ↑ | 可改进↓ | 均排名↓ | 胜场↑ |
-| --- | --- | --- | --- | --- |
-| **LimiX-2 (D)** | **1935** | **3.3%** | **5.5** | **18.9** |
-| TabFM+ | 1818 | 6.2% | 9.0 | 5.3 |
-| Causilo (D) | 1790 | 8.9% | 10.1 | 1.7 |
-| AutoGluon 1.6 (NC, 4h) | 1789 | 8.6% | 10.1 | 1.2 |
-| TabFM (D) | 1774 | 6.5% | 10.7 | 5.9 |
-| Mitra-v2 (D) | 1769 | 8.3% | 10.9 | 3.2 |
-| EXAONE Tabular (D) | 1749 | 9.5% | 11.8 | 2.9 |
-| AutoGluon 1.6 (EX, 4h) | 1738 | 9.2% | 12.3 | 1.2 |
-| AutoGluon 1.5 (EX, 4h) | 1648 | 10.2% | 16.9 | 1.3 |
-| TabPFN-3 (D) | 1632 | 11.6% | 17.9 | 0.4 |
+| 模型                     | Elo ↑    | 可改进↓     | 均排名↓    | 胜场↑      |
+| ---------------------- | -------- | -------- | ------- | -------- |
+| **LimiX-2 (D)**        | **1963** | **3.6%** | **5.0** | **21.7** |
+| TabFM+                 | 1816     | 6.4%     | 9.1     | 5.1      |
+| Causilo (D)            | 1788     | 9.1%     | 10.1    | 1.3      |
+| AutoGluon 1.6 (NC, 4h) | 1787     | 8.8%     | 10.2    | 0.9      |
+| TabFM (D)              | 1772     | 6.7%     | 10.7    | 5.0      |
+| Mitra-v2 (D)           | 1768     | 8.5%     | 10.9    | 3.0      |
+| EXAONE Tabular (D)     | 1746     | 9.7%     | 11.9    | 1.5      |
+| AutoGluon 1.6 (EX, 4h) | 1737     | 9.4%     | 12.3    | 0.8      |
+| AutoGluon 1.5 (EX, 4h) | 1647     | 10.4%    | 16.9    | 1.0      |
+| TabPFN-3 (D)           | 1631     | 11.8%    | 17.9    | 0.4      |
 
-</div>
 
 在分类（38 个数据集，Table 3）与回归（13 个数据集，Table 4）子集上，LimiX-2 同样四项指标全面第一：
 
-<div align="center">
 
-| 子集 | Elo ↑ | 可改进↓ | 均排名↓ | 胜场↑ | 胜率↑ |
-| --- | --- | --- | --- | --- | --- |
-| 分类 | **1917** | **4.3%** | **6.0** | **10.6** | **94.5%** |
-| 回归 | **2206** | **0.6%** | **3.8** | **8.3** | **96.9%** |
+| 子集  | Elo ↑    | 可改进↓     | 均排名↓    | 胜场↑      | 胜率↑       |
+| --- | -------- | -------- | ------- | -------- | --------- |
+| 分类  | **1917** | **4.3%** | **6.0** | **10.6** | **94.5%** |
+| 回归  | **2206** | **0.6%** | **3.8** | **8.3**  | **96.9%** |
 
-</div>
 
-<div align="center">
-  <img src="./doc/figures/fig4_tabarena_elo.png" alt="图 4：TabArena 基准性能" width="100%">
-  <br>
-  <sub>TabArena 基准性能。
-  基线涵盖默认、调优与调优+集成三类配置；LimiX-2 在默认配置下即取得 1935 Elo，优于所有对比基础模型，并超过 4 小时非商业配置的 AutoGluon。</sub>
-</div>
+![图 4：TabArena 基准性能](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig4_tabarena_elo.png)  
+TabArena 基准性能。 基线涵盖默认、调优与调优+集成三类配置；LimiX-2 在默认配置下即取得 1963 Elo，优于所有对比基础模型，并超过 4 小时非商业配置的 AutoGluon。
 
-<div align="center">
-  <img src="./doc/figures/fig5_tabarena_winrate.png" alt="图 5：TabArena 成对胜率" width="66%">
-  <br>
-  <sub>TabArena 成对胜率</sub>
-</div>
+![图 5：TabArena 成对胜率](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig5_tabarena_winrate.png)  
+TabArena 成对胜率
 
 ### ➩ TALENT
 
-在 TALENT 上，LimiX-2 在全部五个评测类别中均取得最高 Elo，总体 Elo 为 **1506**（高出 TabFM 35 分），可改进度为 **6.75%**，聚合胜场为 **84.3**（约为 TabFM 的 1.7 倍）。
+在 TALENT 上，LimiX-2 总体 Elo 为 **1510**（高出 TabFM 39 分），并在分类、回归与二分类上取得最高 Elo，多分类 Elo 为 1517（该列最高为 TabFM 的 1518）。可改进度为 **6.75%**，聚合胜场为 **89.5**（约为 TabFM 的 1.9 倍）。
 
-<div align="center">
 
-| 模型 | Elo | 分类 | 回归 | 二分类 | 多分类 | 可改进↓ | 胜场↑ |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **LimiX-2** | **1506** | **1475** | **1584** | **1455** | **1520** | **6.75%** | **84.3** |
-| TabFM | 1471 | 1449 | 1529 | 1418 | 1517 | 9.17% | 50.1 |
-| AutoGluon 1.6 | 1438 | 1379 | 1581 | 1340 | 1465 | 11.21% | 48.0 |
-| EXAONE Tabular | 1393 | 1358 | 1477 | 1370 | 1342 | 14.74% | 12.9 |
-| TabPFN-3 | 1363 | 1331 | 1441 | 1333 | 1331 | 15.98% | 15.7 |
-| LimiX-16M | 1227 | 1210 | 1268 | 1217 | 1198 | 20.52% | 6.1 |
-| CatBoost | 1094 | 1094 | 1094 | 1107 | 1073 | 26.84% | 4.9 |
-| RandomForest | 1000 | 1000 | 1000 | 1000 | 1000 | 30.06% | 3.8 |
+| 模型             | Elo      | 分类       | 回归       | 二分类      | 多分类      | 可改进↓      | 胜场↑      |
+| -------------- | -------- | -------- | -------- | -------- | -------- | --------- | -------- |
+| **LimiX-2**    | **1510** | **1466** | **1621** | **1444** | 1517     | **6.75%** | **89.5** |
+| TabFM          | 1471     | 1449     | 1531     | 1417     | **1518** | 9.39%     | 46.6     |
+| AutoGluon 1.6  | 1438     | 1380     | 1583     | 1339     | 1468     | 11.51%    | 47.8     |
+| EXAONE Tabular | 1393     | 1357     | 1479     | 1369     | 1341     | 15.00%    | 12.3     |
+| TabPFN-3       | 1364     | 1331     | 1442     | 1333     | 1332     | 15.89%    | 15.1     |
+| LimiX-16M      | 1228     | 1210     | 1269     | 1217     | 1199     | 20.35%    | 6.4      |
+| CatBoost       | 1094     | 1095     | 1094     | 1107     | 1073     | 26.86%    | 4.3      |
+| RandomForest   | 1000     | 1000     | 1000     | 1000     | 1000     | 30.08%    | 3.8      |
 
-</div>
 
-<div align="center">
-  <img src="./doc/figures/fig6_talent_rank.png" alt="图 6：TALENT 平均排名对比" width="76%">
-  <br>
-  <sub>TALENT 平均排名对比。LimiX-2 在二分类、多分类与回归上均取得最低平均排名（4.62、3.91、3.88）。</sub>
-</div>
+![图 6：TALENT 平均排名对比](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig6_talent_rank.png)  
+TALENT 平均排名对比。LimiX-2 在二分类、多分类与回归上均取得最低平均排名（4.62、3.91、3.88）。
 
-<div align="center">
-  <img src="./doc/figures/fig7_talent_winrate.png" alt="图 7：TALENT 成对胜率" width="66%">
-  <br>
-  <sub>TALENT 成对胜率</sub>
-</div>
+![图 7：TALENT 成对胜率](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig7_talent_winrate.png)  
+TALENT 成对胜率
 
 ### ➩ BCCO
 
-在 BCCO 上，LimiX-2 总体排名第一，Elo 为 **1432**（分别高出 AutoGluon 1.6 (EX, 4h)、TabFM、LimiX-16M 达 56 / 63 / 202 分），可改进度为 **6.97%**，聚合胜场为 **50.4**（约为 TabFM 的 3.0 倍）。
+在 BCCO 上，LimiX-2 总体排名第一，Elo 为 **1439**（分别高出 AutoGluon 1.6 (EX, 4h)、TabFM、LimiX-16M 达 64 / 71 / 209 分），可改进度为 **6.79%**，聚合胜场为 **51.2**（约为 TabFM 的 3.3 倍）。
 
-<div align="center">
 
-| 模型 | Elo | 分类 | 回归 | 二分类 | 多分类 | 可改进↓ | 胜场↑ |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **LimiX-2** | **1432** | **1321** | **1859** | **1284** | 1414 | **6.97%** | **50.4** |
-| AutoGluon 1.6 | 1376 | 1269 | 1782 | 1199 | **1443** | 9.77% | 24.5 |
-| TabFM | 1369 | 1260 | 1785 | 1213 | 1374 | 12.24% | 16.7 |
-| EXAONE Tabular | 1345 | 1255 | 1689 | 1224 | 1333 | 13.40% | 7.8 |
-| TabPFN-3 | 1295 | 1188 | 1691 | 1153 | 1275 | 14.92% | 5.7 |
-| LimiX-16M | 1230 | 1195 | 1385 | 1173 | 1252 | 16.94% | 6.1 |
-| CatBoost | 1140 | 1101 | 1287 | 1096 | 1118 | 21.64% | 4.6 |
-| RandomForest | 1000 | 1000 | 1000 | 1000 | 1000 | 26.75% | 2.3 |
+| 模型             | Elo      | 分类       | 回归       | 二分类      | 多分类      | 可改进↓      | 胜场↑      |
+| -------------- | -------- | -------- | -------- | -------- | -------- | --------- | -------- |
+| **LimiX-2**    | **1439** | **1320** | **1902** | **1269** | **1447** | **6.79%** | **51.2** |
+| AutoGluon 1.6  | 1375     | 1269     | 1781     | 1199     | 1445     | 9.88%     | 23.6     |
+| TabFM          | 1368     | 1259     | 1786     | 1212     | 1376     | 12.22%    | 15.3     |
+| EXAONE Tabular | 1343     | 1253     | 1689     | 1221     | 1334     | 13.24%    | 7.8      |
+| TabPFN-3       | 1295     | 1188     | 1692     | 1154     | 1275     | 14.40%    | 5.9      |
+| LimiX-16M      | 1230     | 1194     | 1385     | 1172     | 1253     | 16.32%    | 6.3      |
+| CatBoost       | 1139     | 1100     | 1286     | 1095     | 1118     | 21.72%    | 4.6      |
+| RandomForest   | 1000     | 1000     | 1000     | 1000     | 1000     | 26.72%    | 2.6      |
 
-</div>
 
-<div align="center">
-  <img src="./doc/figures/fig9_bcco_rank.png" alt="图 9：BCCO 平均排名对比" width="76%">
-  <br>
-  <sub>BCCO 平均排名对比。LimiX-2 在二分类、多分类与回归上均取得最低平均排名。</sub>
-</div>
+![图 9：BCCO 平均排名对比](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig9_bcco_rank.png)  
+BCCO 平均排名对比。LimiX-2 在二分类、多分类与回归上均取得最低平均排名。
 
-<div align="center">
-  <img src="./doc/figures/fig10_bcco_winrate.png" alt="图 10：BCCO 成对胜率" width="66%">
-  <br>
-  <sub>BCCO 成对胜率</sub>
-</div>
+![图 10：BCCO 成对胜率](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig10_bcco_winrate.png)  
+BCCO 成对胜率
 
 ### ➩ 缩放定律
 
 缩放研究评测了 LimiX-2 从 12.5M 到 406.2M 参数的配置，并将拟合的对数线性趋势外推至十亿参数量级。在全部五个评测序列上，下游性能均随模型规模呈清晰的对数线性趋势。
 
-<div align="center">
 
-| 评测任务 | α（Elo@100M） | β（每翻倍 Elo 增益） | R² | RMSE |
-| --- | --- | --- | --- | --- |
-| TabArena | 1863.88 | 34.68 | 0.9808 | 8.31 |
-| TALENT 分类 | 1427.25 | 22.16 | 0.9792 | 5.53 |
-| TALENT 回归 | 1545.12 | 18.26 | 0.9680 | 5.69 |
-| BCCO 分类 | 1295.86 | 11.24 | 0.9617 | 3.84 |
-| BCCO 回归 | 1795.89 | 30.06 | 0.9702 | 9.03 |
+| 评测任务      | α（Elo@100M） | β（每翻倍 Elo 增益） | R²     | RMSE  |
+| --------- | ----------- | ------------- | ------ | ----- |
+| TabArena  | 1950.46     | 45.73         | 0.9570 | 16.60 |
+| TALENT 分类 | 1434.61     | 26.37         | 0.9530 | 10.04 |
+| TALENT 回归 | 1618.26     | 19.07         | 0.8848 | 11.79 |
+| BCCO 分类   | 1304.28     | 16.76         | 0.9038 | 9.37  |
+| BCCO 回归   | 1869.14     | 35.19         | 0.9128 | 18.64 |
 
-</div>
 
-<div align="center">
-  <img src="./doc/figures/fig12_scaling_tabarena.png" alt="图 12：TabArena 参数缩放" width="74%">
-  <br>
-  <sub>TabArena 参数缩放。实线连接实测的 LimiX-2 各规模点，虚线为外推至 2B 参数的对数线性拟合。</sub>
-</div>
+![图 12：TabArena 参数缩放](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig12_scaling_tabarena.png)  
+TabArena 参数缩放。实线连接实测的 LimiX-2 各规模点，虚线为外推至 2B 参数的对数线性拟合。
 
-<div align="center">
-  <img src="./doc/figures/fig13_scaling_talent.png" alt="图 13：TALENT 分类与回归参数缩放" width="74%">
-  <br>
-  <sub>TALENT 分类与回归的参数缩放曲线</sub>
-</div>
+![图 13：TALENT 分类与回归参数缩放](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig13_scaling_talent.png)  
+TALENT 分类与回归的参数缩放曲线
 
-<div align="center">
-  <img src="./doc/figures/fig14_scaling_bcco.png" alt="图 14：BCCO 分类与回归参数缩放" width="74%">
-  <br>
-  <sub>BCCO 分类与回归的参数缩放曲线</sub>
-</div>
-
-<br/>
+![图 14：BCCO 分类与回归参数缩放](https://raw.githubusercontent.com/limix-ldm-ai/LimiX/main/doc/figures/fig14_scaling_bcco.png)  
+BCCO 分类与回归的参数缩放曲线
 
 ## ➤ 使用教程
+
+
 
 ### ➩ 安装
 
@@ -241,6 +188,8 @@ wget -O flash_attn.whl https://github.com/Dao-AILab/flash-attention/releases/dow
 pip install flash_attn.whl
 ```
 
+
+
 #### 步骤 2：安装 `ldm-limix`
 
 从 PyPI 安装：
@@ -258,8 +207,6 @@ python -m pip install -e .
 ```
 
 两条命令都会安装 `LimiX-infer` 命令行入口，并使 `from ldm_limix import LimiXPredictor` 在任意工作目录下均可导入。若步骤 1 中已安装 `torch==2.9.1`，此处会直接复用该构建。
-
-<br/>
 
 ## ➤ 推理
 
@@ -295,22 +242,24 @@ LimiX-infer --task_type Feature_imputation --data_dir /path/to/mvi_data --model_
 
 `--task_type` 也接受别名 `cls` / `reg` / `imputation`。常用可选参数：
 
-<div align="center">
 
-| 参数                      | 说明                                                       |
-| ------------------------- | ---------------------------------------------------------- |
-| `--inference_config_path` | JSON 配置路径（默认用内置配置）                             |
-| `--save_name`             | 结果目录名称                                               |
-| `--device`                | `cuda`（默认）或 `cpu`                                     |
-| `--gpuid`                 | GPU 编号（默认 `0`）                                       |
-| `--gpu_num_per_predictor` | 每个 predictor 的 GPU 数（仅 V2.0）                        |
-| `--autobatch`             | 启用自动批处理                                             |
-| `--show_progress`         | 显示进度                                                   |
-| `--seed`                  | 随机种子                                                   |
+| 参数                        | 说明                           |
+| ------------------------- | ---------------------------- |
+| `--inference_config_path` | JSON 配置路径（默认用内置配置）           |
+| `--save_name`             | 结果目录名称                       |
+| `--device`                | `cuda`（默认）或 `cpu`            |
+| `--gpuid`                 | GPU 编号（默认 `0`）               |
+| `--gpu_num_per_predictor` | 每个 predictor 的 GPU 数（仅 V2.0） |
+| `--autobatch`             | 启用自动批处理                      |
+| `--show_progress`         | 显示进度                         |
+| `--seed`                  | 随机种子                         |
 
-</div>
+
+
 
 ### ➩ 接口说明
+
+
 
 #### 模型创建
 
@@ -332,23 +281,23 @@ class LimiXPredictor:
                  seed: int = 0)
 ```
 
-<div align="center">
 
-| 参数                         | 数据类型           | 说明                                                       |
-| ---------------------------- | ------------------ | ---------------------------------------------------------- |
-| device                       | torch.device       | 推理设备，推荐 `cuda`                                      |
-| model_path                   | str                | checkpoint 路径                                            |
-| inference_config             | dict / list / str  | 推理配置（dict / list / JSON 路径）                        |
-| mix_precision                | bool               | 是否混合精度                                               |
-| outlier_remove_std           | float              | 异常值裁剪的标准差倍数                                     |
-| softmax_temperature          | float              | Softmax 温度（须 > 0）                                     |
-| average_before_softmax       | bool               | 分桶回归：softmax 前是否先平均                             |
-| categorical_features_indices | list               | 类别列的索引                                               |
-| inference_with_DDP           | bool               | 是否启用 DDP（V2.0 保持 False）                            |
-| use_data_cache               | bool               | 预处理结果是否落盘缓存                                     |
-| seed                         | int                | 随机状态种子                                               |
+| 参数                           | 数据类型              | 说明                          |
+| ---------------------------- | ----------------- | --------------------------- |
+| device                       | torch.device      | 推理设备，推荐 `cuda`              |
+| model_path                   | str               | checkpoint 路径               |
+| inference_config             | dict / list / str | 推理配置（dict / list / JSON 路径） |
+| mix_precision                | bool              | 是否混合精度                      |
+| outlier_remove_std           | float             | 异常值裁剪的标准差倍数                 |
+| softmax_temperature          | float             | Softmax 温度（须 > 0）           |
+| average_before_softmax       | bool              | 分桶回归：softmax 前是否先平均         |
+| categorical_features_indices | list              | 类别列的索引                      |
+| inference_with_DDP           | bool              | 是否启用 DDP（V2.0 保持 False）     |
+| use_data_cache               | bool              | 预处理结果是否落盘缓存                 |
+| seed                         | int               | 随机状态种子                      |
 
-</div>
+
+
 
 #### 预测
 
@@ -361,17 +310,15 @@ def predict(self,
             unique_dataset_name: str | None = None) -> np.ndarray:
 ```
 
-<div align="center">
 
-| 参数                | 数据类型   | 说明                                                     |
-| ------------------- | ---------- | -------------------------------------------------------- |
-| x_train             | np.ndarray | 训练特征，形状 `(n_train, n_features)`                   |
-| y_train             | np.ndarray | 训练目标，形状 `(n_train,)`                              |
-| x_test              | np.ndarray | 查询特征，列需与 `x_train` 对齐                             |
+| 参数                  | 数据类型       | 说明                                                             |
+| ------------------- | ---------- | -------------------------------------------------------------- |
+| x_train             | np.ndarray | 训练特征，形状 `(n_train, n_features)`                                |
+| y_train             | np.ndarray | 训练目标，形状 `(n_train,)`                                           |
+| x_test              | np.ndarray | 查询特征，列需与 `x_train` 对齐                                          |
 | task_type           | str        | `"Classification"`（默认）、`"Regression"` 或 `"Feature_imputation"` |
-| unique_dataset_name | str        | 数据集标识（可选，用于缓存）                             |
+| unique_dataset_name | str        | 数据集标识（可选，用于缓存）                                                 |
 
-</div>
 
 返回值：
 
@@ -379,22 +326,24 @@ def predict(self,
 - 回归：预测值，形状 `(n_query,)`（V2.0 直接返回原始目标尺度，无需手动反归一化）
 - 缺失值插补：插补后的特征矩阵
 
+
+
 ### ➩ 推理配置文件
 
-<div align="center">
 
-| 配置文件名                          | 适用模型              | 说明                                   |
-| ----------------------------------- | --------------------- | -------------------------------------- |
-| cls_default_noretrieval_v2.json     | LimiX-2 / V2.0        | 默认**分类**（不检索）               |
-| reg_default_noretrieval_v2.json     | LimiX-2 / V2.0        | 默认**回归**（不检索）               |
-| reg_default_noretrieval_MVI_v2.json | LimiX-2 / V2.0        | 默认**缺失值插补**                   |
-| cls_default_retrieval.json          | LimiX-16M / LimiX-2M  | 分类 + 检索，精度更高                 |
-| cls_default_noretrieval.json        | LimiX-16M / LimiX-2M  | 分类不检索，更快更省显存              |
-| reg_default_retrieval.json          | LimiX-16M / LimiX-2M  | 回归 + 检索，精度更高                 |
-| reg_default_noretrieval.json        | LimiX-16M / LimiX-2M  | 回归不检索，更快更省显存              |
-| reg_default_noretrieval_MVI.json    | LimiX-16M / LimiX-2M  | 缺失值插补                             |
+| 配置文件名                               | 适用模型                 | 说明            |
+| ----------------------------------- | -------------------- | ------------- |
+| cls_default_noretrieval_v2.json     | LimiX-2 / V2.0       | 默认**分类**（不检索） |
+| reg_default_noretrieval_v2.json     | LimiX-2 / V2.0       | 默认**回归**（不检索） |
+| reg_default_noretrieval_MVI_v2.json | LimiX-2 / V2.0       | 默认**缺失值插补**   |
+| cls_default_retrieval.json          | LimiX-16M / LimiX-2M | 分类 + 检索，精度更高  |
+| cls_default_noretrieval.json        | LimiX-16M / LimiX-2M | 分类不检索，更快更省显存  |
+| reg_default_retrieval.json          | LimiX-16M / LimiX-2M | 回归 + 检索，精度更高  |
+| reg_default_noretrieval.json        | LimiX-16M / LimiX-2M | 回归不检索，更快更省显存  |
+| reg_default_noretrieval_MVI.json    | LimiX-16M / LimiX-2M | 缺失值插补         |
 
-</div>
+
+
 
 ### ➩ 分类
 
@@ -433,7 +382,7 @@ print("roc_auc_score:", roc_auc_score(y_test, prediction[:, 1]))
 print("accuracy_score:", accuracy_score(y_test, np.argmax(prediction, axis=1)))
 ```
 
-完整示例见 [examples/demo_classification.py](./examples/demo_classification.py)
+完整示例见 [examples/demo_classification.py](https://github.com/limix-ldm-ai/LimiX/blob/main/examples/demo_classification.py)
 
 ### ➩ 回归
 
@@ -482,7 +431,7 @@ print(f"RMSE: {rmse}")
 print(f"R2: {r2}")
 ```
 
-完整示例见 [examples/demo_regression.py](./examples/demo_regression.py)
+完整示例见 [examples/demo_regression.py](https://github.com/limix-ldm-ai/LimiX/blob/main/examples/demo_regression.py)
 
 ### ➩ 缺失值插补
 
@@ -495,20 +444,22 @@ model = LimiXPredictor(
 reconstructed_X = model.predict(X_train, y_train, x_test_with_nan, task_type="Feature_imputation")
 ```
 
-完整示例见 [examples/demo_missing_value_imputation.py](./examples/demo_missing_value_imputation.py)
+完整示例见 [examples/demo_missing_value_imputation.py](https://github.com/limix-ldm-ai/LimiX/blob/main/examples/demo_missing_value_imputation.py)
 
 ## ➤ 相关链接
 
 - LimiX:Unleashing Structured-Data Modeling Capability for Generalist Intelligence: [Arxiv](https://arxiv.org/abs/2509.03505)
 - LimiX 技术报告：[LimiX_Technical_Report.pdf](https://github.com/limix-ldm/LimiX/blob/main/LimiX_Technical_Report.pdf)
-- LimiX-2 技术报告：[LimiX_2_Technical_Report.pdf](./LimiX_2_Technical_Report.pdf)
+- LimiX-2 技术报告：[LimiX_2_Technical_Report.pdf](https://github.com/limix-ldm-ai/LimiX/blob/main/LimiX_2_Technical_Report.pdf)
 - LimiX 详细使用说明：[访问 Limix 官方文档](https://www.limix.ai/doc/)
 - Balance Comprehensive Challenging Omni-domain 分类基准：[BCCO_cls](https://huggingface.co/datasets/stable-ai/bcco_cls)
 - Balance Comprehensive Challenging Omni-domain 回归基准：[BCCO_reg](https://huggingface.co/datasets/stable-ai/bcco_reg)
 
+
+
 ## 📃 许可证
 
-本仓库中的代码采用 Stable AI Technology Co., Ltd. License, Version 1.0 (2026年9月) 授权，该许可证衍生自 Apache License, Version 2.0：其中第 1–9 节沿用了 Apache 2.0 的条款与条件，仅对第 1 节中“License”（许可证）的定义进行了修改，以便纳入第 10 节（关于署名及模型命名的附加要求）的规定。第三方代码受其各自的许可证及署名要求约束；详情请参阅 [LICENSE.txt](./LICENSE.txt)。模型权重采用单独的许可证授权：第三方代码遵循其各自的许可与署名要求，详见 [LICENSE.txt](./LICENSE.txt)。模型权重单独授权:
+本仓库中的代码采用 Stable AI Technology Co., Ltd. License, Version 1.0 (2026年9月) 授权，该许可证衍生自 Apache License, Version 2.0：其中第 1–9 节沿用了 Apache 2.0 的条款与条件，仅对第 1 节中“License”（许可证）的定义进行了修改，以便纳入第 10 节（关于署名及模型命名的附加要求）的规定。第三方代码受其各自的许可证及署名要求约束；详情请参阅 [LICENSE.txt](https://github.com/limix-ldm-ai/LimiX/blob/main/LICENSE.txt)。模型权重采用单独的许可证授权：第三方代码遵循其各自的许可与署名要求，详见 [LICENSE.txt](https://github.com/limix-ldm-ai/LimiX/blob/main/LICENSE.txt)。模型权重单独授权:
 
 - LimiX-2: [非商用许可协议](https://huggingface.co/stableai-org/LimiX-2/blob/main/LICENSE)
 - LimiX-1-2M: [许可协议](https://huggingface.co/stableai-org/LimiX-1_2M/blob/main/LICENSE)
@@ -517,7 +468,9 @@ reconstructed_X = model.predict(X_train, y_train, x_test_with_nan, task_type="Fe
 - LimiX-16M: [许可协议](https://huggingface.co/stableai-org/LimiX-16M/blob/main/LICENSE.txt)
 
 
+
 ## 📝 引用
+
 ```bibtex
 @misc{zhang2026limix2contextualmechanismnetwork,
       title={LimiX-2: A Contextual Mechanism Network Towards General Structured-Data Intelligence}, 
@@ -543,3 +496,4 @@ reconstructed_X = model.predict(X_train, y_train, x_test_with_nan, task_type="Fe
   year={2025}
 }
 ```
+
