@@ -26,6 +26,8 @@
 - **[2025.08.29] 🚀 LimiX V1.0 正式发布**
 LimiX结构化数据基础模型首个稳定官方版本开源上线。
 
+<br/>
+
 ## ➩ 模型下载
 
 | 模型           | 参数量  | 发布日期       | 下载链接                                                                       | 支持的任务             |
@@ -34,6 +36,8 @@ LimiX结构化数据基础模型首个稳定官方版本开源上线。
 | LimiX-2      | 400M | 2026-09-16 | [LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main)         | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
 | LimiX-1_2M   | 2M   | 2025-11-10 | [LimiX-1_2M.ckpt](https://huggingface.co/stable-ai/LimiX-1_2M/tree/main)   | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
 | LimiX-1_16M  | 16M  | 2025-08-29 | [LimiX-1_16M.ckpt](https://huggingface.co/stable-ai/LimiX-1_16M/tree/main) | ✅ 分类 ✅ 回归 ✅ 缺失值插补 |
+
+<br/>
 
 ## ✨ LimiX-2 模型架构与预训练数据
 
