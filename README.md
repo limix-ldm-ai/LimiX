@@ -44,7 +44,7 @@
 
 <div align="center">
 
-| Model | Parameters | Release date | Download link | Tasks supported |
+| Model | Parameters | Release Date | Download Link | Tasks Supported |
 | ----------- | ------------ | ------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------ |
 | LimiX-2-1016 | 400M | 10 Nov 2026 | [LimiX-2-1016.ckpt](https://huggingface.co/stable-ai/LimiX-2-1016/tree/main) | ✅ cls ✅ reg ✅ imputation |
 | LimiX-2 | 400M | 16 Sept 2026 | [LimiX-2.ckpt](https://huggingface.co/stable-ai/LimiX-2/tree/main) | ✅ cls ✅ reg ✅ imputation |
